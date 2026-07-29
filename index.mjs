@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config'; // Load environment variables first
 
 import express from 'express';
 import mysql from 'mysql2/promise';
