@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import mysql from 'mysql2/promise';
 
@@ -10,23 +13,20 @@ app.use(express.static('public'));
 app.use(express.urlencoded({extended:true}));
 
 //setting up database connection pool
-/* // todo: UNCOMMENT WHEN IMPLEMENTING DATABASE
 const pool = mysql.createPool({
-    host: "your_hostname",
-    user: "your_username",
-    password: "your_password",
-    database: "your_database",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     connectionLimit: 10,
     waitForConnections: true
 });
-*/
 
 //routes
 app.get('/', (req, res) => {
    res.send('Hello Express app!')
 });
 
-/*
 app.get("/dbTest", async(req, res) => {
    try {
         const [rows] = await pool.query("SELECT CURDATE()");
@@ -36,7 +36,6 @@ app.get("/dbTest", async(req, res) => {
         res.status(500).send("Database error");
     }
 });//dbTest
-*/
 
 app.listen(3000, ()=>{
     console.log("Express server running")
