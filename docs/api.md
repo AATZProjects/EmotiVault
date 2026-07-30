@@ -11,7 +11,7 @@ Read the documentation for specific APIs to see their intended domain of input p
 ***For internal development***, simply use `/api/` followed by [the listed API](#apis) followed by their parameters indicated in their documentation.
 
 # Errors
-If you use an API and pass in invalid arguments, you will receive an error response with data name `error`. It will return a String detailing the reason why the parameter failed. No emoticon will be returned.
+If you use an API and pass in invalid arguments, you will receive an error response with data name `error`. It will return a String detailing the reason why the call failed. No emoticon will be returned.
 
 Refer to the [emoticonId API table](#emoticonsemoticonid) to see an example of an error in the output.
 
@@ -24,7 +24,7 @@ Refer to the [emoticonId API table](#emoticonsemoticonid) to see an example of a
 # /emoticons/{emoticonId}
 Returns all information of an emoticon given its ID.
 
-If the input is empty or out of rang, an error will return.
+If the input is empty or out of range, an error will return.
 
 Requesting an Emoticon given its ID will return the following information:
 - emoticonId
@@ -61,7 +61,7 @@ emoticonId:
 
 | Parameter | Example | Output |
 | :---: | :---: | :---: |
-| **No Args** | /api/emoticons/all | {1 {...}, 2 {...}, 3 {...}, 4 {...}, -> n{...}} |
+| **No Args** | /api/emoticons/all | {1 {...}, 2 {...}, 3 {...}, 4 {...}, -> size{...}} |
 | **page=** | /api/emoticons/all?**page=2** | {21 {...}, 22 {...}, -> 40 {...}} |
 |**limit=** | /api/emoticons/all?page=3&**limit=2** | {41 {...}, 42 {...}} |
 | **pageCount=** | /api/emoticons/all?**pageCount=3**&page=2 | {4 {...}, 5 {...}, 6 {...}} |
@@ -80,7 +80,7 @@ The `/emoticons/filter` API is unique as it is also able to filter emoticons by 
 **sortBy=** | .../filter?**sortBy=popular** | All emoticons in order from Most Popular to Least Popular (most favorites).
 **search=** | .../filter?**search=smile** | All emoticons which the mood, category, or internal name contain the word "smile". 
 
-For a complete list of all possible categories, moods, and orders, refer to [this table.](#emoticon-fields)
+For a complete list of all possible categories, moods, and orders, refer to [the Emoticon Fields table.](#emoticon-fields)
 
 # /emoticon-of-the-day
 The Emoticon of the Day API will return the website's current daily emoticon. The API will return the following information:
