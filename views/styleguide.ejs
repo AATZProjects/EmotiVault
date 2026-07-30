@@ -1,0 +1,226 @@
+<%- include("partials/header.ejs") %>
+
+<main class="container ev-main">
+  <header class="mb-4">
+    <h1 class="ev-page-title">EmotiVault Style Guide</h1>
+  </header>
+
+  <!-- =====================================================
+       VISUAL STANDARDS
+       ===================================================== -->
+
+  <section class="ev-window mb-4">
+    <div class="ev-window-titlebar">
+      <span class="ev-window-title">Visual Standards</span>
+
+      <div class="ev-window-controls" aria-hidden="true">
+        <span class="ev-window-control">—</span>
+        <span class="ev-window-control">□</span>
+        <span class="ev-window-control ev-window-control--close">×</span>
+      </div>
+    </div>
+
+    <div class="ev-window-body">
+      <h2 class="ev-section-title">Color Palette</h2>
+
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="ev-token-card">
+            <div class="ev-color-swatch ev-color-primary"></div>
+            <strong>Primary Blue</strong>
+            <code>--ev-blue</code>
+            <code>#0038A6</code>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="ev-token-card">
+            <div class="ev-color-swatch ev-color-blue-light"></div>
+            <strong>Light Blue</strong>
+            <code>--ev-blue-light</code>
+            <code>#4F8BFF</code>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="ev-token-card">
+            <div class="ev-color-swatch ev-color-purple"></div>
+            <strong>Purple</strong>
+            <code>--ev-purple</code>
+            <code>#A547D6</code>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="ev-token-card">
+            <div class="ev-color-swatch ev-color-yellow"></div>
+            <strong>Yellow</strong>
+            <code>--ev-yellow</code>
+            <code>#FFCC00</code>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="ev-token-card">
+            <div class="ev-color-swatch ev-color-green"></div>
+            <strong>Green</strong>
+            <code>--ev-green</code>
+            <code>#00A650</code>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="ev-token-card">
+            <div class="ev-color-swatch ev-color-red"></div>
+            <strong>Red</strong>
+            <code>--ev-red</code>
+            <code>#D9463E</code>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="ev-section-title mt-4">Typography</h2>
+
+      <article class="ev-panel mb-4">
+        <div class="ev-panel-header">Preview</div>
+
+        <div class="ev-panel-body">
+          <h1 class="mb-3">Heading One</h1>
+          <h2 class="mb-3">Heading Two</h2>
+          <h3 class="mb-3">Heading Three</h3>
+
+          <p class="mb-2">
+            Standard body text uses Tahoma, Verdana, or MS Sans Serif.
+          </p>
+
+          <p class="ev-muted mb-2">
+            Muted text is used for secondary information and descriptions.
+          </p>
+
+          <p class="ev-font-monospace fs-4 mb-0">¯\_(ツ)_/¯</p>
+        </div>
+      </article>
+
+      <h2 class="ev-section-title">HTML</h2>
+
+      <pre class="ev-code-block"><code>&lt;h1&gt;Heading One&lt;/h1&gt;
+
+&lt;h2&gt;Heading Two&lt;/h2&gt;
+
+&lt;h3&gt;Heading Three&lt;/h3&gt;
+
+&lt;p&gt;
+  Standard body text
+&lt;/p&gt;
+
+&lt;p class="ev-muted"&gt;
+  Muted supporting text
+&lt;/p&gt;
+
+&lt;p class="ev-font-monospace"&gt;
+  ¯\_(ツ)_/¯
+&lt;/p&gt;</code></pre>
+
+      <div class="ev-usage-notes">
+        <h3>Usage notes</h3>
+
+        <ul class="mb-0">
+          <li>Use one <code>h1</code> for the main page title.</li>
+          <li>Use <code>h2</code> for major sections.</li>
+          <li>Use <code>h3</code> for smaller subsections.</li>
+          <li>Use <code>ev-muted</code> for secondary text.</li>
+          <li>
+            Use <code>ev-font-monospace</code> when displaying emoticons whose
+            spacing matters.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       CONTAINERS
+       ===================================================== -->
+
+  <section class="ev-window mb-4">
+    <div class="ev-window-titlebar">
+      <span class="ev-window-title">Containers</span>
+
+      <div class="ev-window-controls" aria-hidden="true">
+        <span class="ev-window-control">—</span>
+        <span class="ev-window-control">□</span>
+        <span class="ev-window-control ev-window-control--close">×</span>
+      </div>
+    </div>
+
+    <div class="ev-window-body">
+      <h2 class="ev-section-title">Preview</h2>
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <article class="ev-panel h-100">
+            <div class="ev-panel-header">Standard Panel</div>
+
+            <div class="ev-panel-body">
+              <p class="mb-0">
+                Use this container for filters, forms, account information, and
+                regular page content.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-md-6">
+          <article class="ev-panel h-100">
+            <div class="ev-panel-header ev-panel-header--purple">
+              Featured Panel
+            </div>
+
+            <div class="ev-panel-body ev-bg-warm">
+              <p class="mb-0">
+                Use this variation for featured content such as Emoticon of the
+                Day.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <h2 class="ev-section-title mt-4">HTML</h2>
+
+      <pre class="ev-code-block"><code>&lt;section class="ev-window"&gt;
+  &lt;div class="ev-window-titlebar"&gt;
+    &lt;span class="ev-window-title"&gt;Window Title&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class="ev-window-body"&gt;
+    Page content goes here.
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;article class="ev-panel"&gt;
+  &lt;div class="ev-panel-header"&gt;Panel Title&lt;/div&gt;
+
+  &lt;div class="ev-panel-body"&gt;
+    Panel content goes here.
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+
+      <div class="ev-usage-notes">
+        <h3>Usage notes</h3>
+
+        <ul class="mb-0">
+          <li>Use <code>ev-window</code> for major page sections.</li>
+          <li>
+            Use <code>ev-panel</code> inside windows to group related content.
+          </li>
+          <li>
+            Add <code>ev-panel-header--purple</code> only to featured panels.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include("partials/footer.ejs") %>
