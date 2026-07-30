@@ -18,7 +18,7 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   connectionLimit: 10,
-  waitForConnections: true
+  waitForConnections: true,
 });
 
 //routes
@@ -26,8 +26,18 @@ app.get('/', (req, res) => {
   res.send('Hello Express app!');
 });
 
+app.get('/aim-status-generator', (req, res) => {
+  res.render('aim-status-generator', {
+    pageTitle: 'AIM Away Message Generator',
+    currentPage: 'aim-status',
+  });
+});
+
 app.get('/styleguide', (req, res) => {
-  res.render('styleguide');
+  res.render('styleguide', {
+    pageTitle: 'Style Guide',
+    currentPage: 'styleguide',
+  });
 });
 
 app.get('/dbTest', async (req, res) => {

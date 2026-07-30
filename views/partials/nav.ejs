@@ -4,22 +4,34 @@
   </a>
 
   <div class="nav-links">
-    <a class="nav-item" href="/">
+    <a
+      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>"
+      href="/"
+    >
       <img src="/imgs/emotivault_icon_home.svg" alt="" class="nav-icon" />
       <span>Home</span>
     </a>
 
-    <a class="nav-item" href="/browse">
+    <a
+      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'browse' ? 'active' : '' %>"
+      href="/browse"
+    >
       <img src="/imgs/emotivault_icon_browse.svg" alt="" class="nav-icon" />
       <span>Browse</span>
     </a>
 
-    <a class="nav-item" href="/aim-status">
+    <a
+      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'aim-status' ? 'active' : '' %>"
+      href="/aim-status-generator"
+    >
       <img src="/imgs/emotivault_aim_buddy.svg" alt="" class="nav-icon" />
       <span>AIM Status</span>
     </a>
 
-    <a class="nav-item" href="/favorites">
+    <a
+      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'favorites' ? 'active' : '' %>"
+      href="/favorites"
+    >
       <img src="/imgs/emotivault_icon_favorites.svg" alt="" class="nav-icon" />
       <span>Favorites</span>
     </a>
