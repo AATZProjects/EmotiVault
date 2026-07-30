@@ -6,21 +6,21 @@ You can access the daily emoticon, retrieve a collection of emoticons using filt
 # How to Use
 Read the documentation for specific APIs to see their intended domain of input parameters and outputs.
 
-***For public use***: the webpage https://emotivault.onrender.com/api/ should be the base URL. Following the URL, you may enter [the listed API](#APIs) followed by any of their parameters as indicated in their documentation.
+***For public use***: the webpage https://emotivault.onrender.com/api/ should be the base URL. Following the URL, you may enter [the listed API](#apis) followed by any of their parameters as indicated in their documentation.
 
-***For internal development***, simply use `/api/` followed by [the listed API](#APIs) followed by their parameters indicated in their documentation.
+***For internal development***, simply use `/api/` followed by [the listed API](#apis) followed by their parameters indicated in their documentation.
 
 # Errors
 If you use an API and pass in invalid arguments, you will receive an error response with data name `error`. It will return a String detailing the reason why the parameter failed. No emoticon will be returned.
 
-Refer to the [emoticonId API table](#/emoticons/{emoticonId}) to see an example of an error in the output.
+Refer to the [emoticonId API table](#emoticonsemoticonid) to see an example of an error in the output.
 
 # APIs
-1. **/emoticons/{emoticonId}**
-2. **/emoticons/all**
-3. **/emoticons/filter**
-4. **/emoticons/search**
-5. **/emoticon-of-the-day**
+1. [/emoticons/{emoticonId}](#emoticonsemoticonid)
+2. [/emoticons/all](#emoticonsall)
+3. /emoticons/filter
+4. /emoticons/search
+5. [/emoticon-of-the-day](#emoticon-of-the-day)
 
 # /emoticons/{emoticonId}
 Returns all information of an emoticon given its ID.
@@ -82,4 +82,4 @@ The API takes no parameters and only returns the daily Emoticon.
 
 | Parameter | Example | Output |
 | :---: | :---: | :---: |
-| **No args** | /api/emoticon-of-the-day | "date": 2026-07-30,<br>"emoticonId": 21:<br>{"emoticonId": 21,<br>"emoticonName": "Classic Happy 2",<br>"emoticonString": ":)",<br>"emoticonCategory": "Classic",<br>"emoticonMood": "Happy"} |
+| **No args** | /api/emoticon-of-the-day | "date": 2026-07-30,<br>"emoticonId": 21:<br>{"emoticonId": 21,<br>"emoticonName": "Classic Happy 2",<br>"emoticonString": ":)",<br>"emoticonCategory": "Classic",<br>"emoticonMood": "Happy"} 
