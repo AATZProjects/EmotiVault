@@ -154,9 +154,35 @@
     </div>
 
     <div class="ev-window-body">
-      <h2 class="ev-section-title">Preview</h2>
+      The main container is the one this content is in. It has the EmotiVault
+      blue title bar and the window control icons in the corner.
+      <h2 class="ev-section-title mt-4">HTML</h2>
 
-      <div class="row g-4">
+      <pre
+        class="ev-code-block"
+      ><code>&lt;main class="ev-main container-fluid"&gt;
+  &lt;div class="ev-window"&gt;
+
+    &lt;div class="ev-window-titlebar"&gt;
+      &lt;span class="ev-window-title"&gt;
+        Window Title Goes Here
+      &lt;/span&gt;
+
+      &lt;div class="ev-window-controls" aria-hidden="true"&gt;
+        &lt;span class="ev-window-control"&gt;—&lt;/span&gt;
+        &lt;span class="ev-window-control"&gt;□&lt;/span&gt;
+        &lt;span class="ev-window-control ev-window-control--close"&gt;×&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="ev-window-body"&gt;
+      Body Content Goes Here
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+&lt;/main&gt;</code></pre>
+
+      <div class="row g-4 mt-4">
         <div class="col-md-6">
           <article class="ev-panel h-100">
             <div class="ev-panel-header">Standard Panel</div>
@@ -188,29 +214,20 @@
 
       <h2 class="ev-section-title mt-4">HTML</h2>
 
-      <pre class="ev-code-block"><code>&lt;section class="ev-window"&gt;
-  &lt;div class="ev-window-titlebar"&gt;
-    &lt;span class="ev-window-title"&gt;Window Title&lt;/span&gt;
+      <pre class="ev-code-block"><code>&lt;div class="ev-panel"&gt;
+  &lt;div class="ev-panel-header"&gt;
+    Standard Panel
   &lt;/div&gt;
-
-  &lt;div class="ev-window-body"&gt;
-    Page content goes here.
-  &lt;/div&gt;
-&lt;/section&gt;
-
-&lt;article class="ev-panel"&gt;
-  &lt;div class="ev-panel-header"&gt;Panel Title&lt;/div&gt;
 
   &lt;div class="ev-panel-body"&gt;
-    Panel content goes here.
+    Use this container for filters, forms, account information, and regular page content.
   &lt;/div&gt;
-&lt;/article&gt;</code></pre>
+&lt;/div&gt;</code></pre>
 
       <div class="ev-usage-notes">
         <h3>Usage notes</h3>
 
         <ul class="mb-0">
-          <li>Use <code>ev-window</code> for major page sections.</li>
           <li>
             Use <code>ev-panel</code> inside windows to group related content.
           </li>
