@@ -18,9 +18,8 @@ Refer to the [emoticonId API table](#emoticonsemoticonid) to see an example of a
 # APIs
 1. [/emoticons/{emoticonId}](#emoticonsemoticonid)
 2. [/emoticons/all](#emoticonsall)
-3. /emoticons/filter
-4. /emoticons/search
-5. [/emoticon-of-the-day](#emoticon-of-the-day)
+3. [/emoticons/filter](#emoticonsfilter)
+4. [/emoticon-of-the-day](#emoticon-of-the-day)
 
 # /emoticons/{emoticonId}
 Returns all information of an emoticon given its ID.
@@ -33,6 +32,7 @@ Requesting an Emoticon given its ID will return the following information:
 - emoticonString
 - emoticonCategory
 - emoticonMood
+- emoticonFavorites
 
 | Parameter | Example | Output |
 | :---: | :---: | :---: |
@@ -56,6 +56,7 @@ emoticonId:
     - emoticonString
     - emoticonCategory
     - emoticonMood
+    - emoticonFavorites
 ```
 
 | Parameter | Example | Output |
@@ -64,6 +65,22 @@ emoticonId:
 | **page=** | /api/emoticons/all?**page=2** | {21 {...}, 22 {...}, -> 40 {...}} |
 |**limit=** | /api/emoticons/all?page=3&**limit=2** | {41 {...}, 42 {...}} |
 | **pageCount=** | /api/emoticons/all?**pageCount=3**&page=2 | {4 {...}, 5 {...}, 6 {...}} |
+
+# /emoticons/filter
+The Emoticons Filter API works similarly to the [/emoticons/all](#emoticonsall) API in the sense that it returns a bulk list of emoticons in the same formatting and can be filtered using pagination and return limits, but also carries its own set of filters and ordering conventions.
+
+Refer to the [/emoticons/all](#emoticonsall) API to see how to utilize the paging system and display filtering.
+
+The `/emoticons/filter` API is unique as it is also able to filter emoticons by category and mood, as well as search by keywords and order the results.
+
+| Parameter | Example | Output |
+| :---: | :---: | :---: |
+**category=** | .../filter?**category=kaomoji** | All emoticons containing `Koamoji` as their category field.
+**mood=** | .../filter?**mood=shock** | All emoticons containing `Shock` as their mood.
+**sortBy=** | .../filter?**sortBy=mostPopular** | All emoticons in order from Most Popular to Least Popular (most favorites).
+**search=** | .../filter?**search=smile** | All emoticons which the mood, category, or internal name contain the word "smile". 
+
+For a complete list of all possible categories, moods, and orders, refer to [this table.](#emoticon-fields)
 
 # /emoticon-of-the-day
 The Emoticon of the Day API will return the website's current daily emoticon. The API will return the following information:
@@ -76,6 +93,7 @@ emoticonId:
     - emoticonString
     - emoticonCategory
     - emoticonMood
+    - emoticonFavorites
 ```
 
 The API takes no parameters and only returns the daily Emoticon.
@@ -83,3 +101,5 @@ The API takes no parameters and only returns the daily Emoticon.
 | Parameter | Example | Output |
 | :---: | :---: | :---: |
 | **No args** | /api/emoticon-of-the-day | "date": 2026-07-30,<br>"emoticonId": 21:<br>{"emoticonId": 21,<br>"emoticonName": "Classic Happy 2",<br>"emoticonString": ":)",<br>"emoticonCategory": "Classic",<br>"emoticonMood": "Happy"} 
+
+# Emoticon Fields
