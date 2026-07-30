@@ -77,7 +77,7 @@ The `/emoticons/filter` API is unique as it is also able to filter emoticons by 
 | :---: | :---: | :---: |
 **category=** | .../filter?**category=kaomoji** | All emoticons containing `Koamoji` as their category field.
 **mood=** | .../filter?**mood=shock** | All emoticons containing `Shock` as their mood.
-**sortBy=** | .../filter?**sortBy=mostPopular** | All emoticons in order from Most Popular to Least Popular (most favorites).
+**sortBy=** | .../filter?**sortBy=popular** | All emoticons in order from Most Popular to Least Popular (most favorites).
 **search=** | .../filter?**search=smile** | All emoticons which the mood, category, or internal name contain the word "smile". 
 
 For a complete list of all possible categories, moods, and orders, refer to [this table.](#emoticon-fields)
@@ -103,3 +103,47 @@ The API takes no parameters and only returns the daily Emoticon.
 | **No args** | /api/emoticon-of-the-day | "date": 2026-07-30,<br>"emoticonId": 21:<br>{"emoticonId": 21,<br>"emoticonName": "Classic Happy 2",<br>"emoticonString": ":)",<br>"emoticonCategory": "Classic",<br>"emoticonMood": "Happy"} 
 
 # Emoticon Fields
+These are the possible values that can be stored internally in each Emoticon's database row:
+
+## Category
+Saved internally as emoticonCategory
+
+| Name | Display Name | /emoticons/filter/category=___ |
+| :---: | :---: | :---: |
+| Classic | Classic (Latin) | classic |
+Upright | Upright | upright
+Unicode | Unicode | unicode
+Kaomoji | Kaomoji | kaomoji
+Misc | Misc | misc
+2Channel | 2Channel | 2channel
+
+## Mood
+Saved internally as emoticonMood
+
+| Name/Display Name | /emoticons/filter/mood=___ |
+| :---: | :---: |
+Happy | happy
+Sad | sad
+Angry | angry
+Love | love
+Surprised | surprised
+Confused | confused
+Embarrassed | embarrassed
+Playful | playful
+Neutral | neutral
+Sleepy | sleepy
+Cool | cool
+Respect | respect
+
+## Sort By
+When using the [/emoticons/filter/](#emoticonsfilter) API, it is permitted to use the Sort By parameter: `?sortBy=`.
+
+These are the allowed values and their outputs.
+
+?sortBy=**___** | Result
+:---: | :---:
+emoticonId | Emoticons are ordered by their IDs ascending.<br>This is the default sort method when calling [.../all/](#emoticonsall) and [.../filter/](#emoticonsfilter).
+category | Emoticons are sorted by their category, descending alphabetically (A -> Z).
+mood | Emoticons are sorted by their mood, descending alphabetically (A -> Z).
+popular | Emoticons are ordered using their Favorites count, descending numerically (Greatest to Least).
+leastPopular | Emoticons are ordered using their Favorites count, ascending numerically (Least to Greatest).
