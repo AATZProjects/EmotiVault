@@ -221,6 +221,134 @@
       </div>
     </div>
   </section>
+
+  <!-- =====================================================
+       BUTTONS
+       ===================================================== -->
+
+  <section class="ev-window mb-4">
+    <div class="ev-window-titlebar">
+      <span class="ev-window-title">Buttons</span>
+
+      <div class="ev-window-controls" aria-hidden="true">
+        <span class="ev-window-control">—</span>
+        <span class="ev-window-control">□</span>
+        <span class="ev-window-control ev-window-control--close">×</span>
+      </div>
+    </div>
+
+    <div class="ev-window-body">
+      <h2 class="ev-section-title">Preview</h2>
+
+      <div class="d-flex flex-wrap gap-2 ev-button-row">
+        <button type="button" class="ev-btn ev-btn-primary">Primary</button>
+
+        <button type="button" class="ev-btn ev-btn-secondary">Secondary</button>
+
+        <button type="button" class="ev-btn ev-btn-success">Success</button>
+
+        <button type="button" class="ev-btn ev-btn-danger">Danger</button>
+
+        <button type="button" class="ev-btn ev-btn-warning">Warning</button>
+
+        <button type="button" class="ev-btn ev-btn-light">Light</button>
+
+        <button type="button" class="ev-btn ev-btn-outline">Outline</button>
+
+        <button type="button" class="ev-btn ev-btn-primary" disabled>
+          Disabled
+        </button>
+      </div>
+
+      <h2 class="ev-section-title mt-4">HTML</h2>
+
+      <pre
+        class="ev-code-block"
+      ><code>&lt;button type="button" class="ev-btn ev-btn-primary"&gt;
+  Primary
+&lt;/button&gt;
+
+&lt;button type="button" class="ev-btn ev-btn-secondary"&gt;
+  Secondary
+&lt;/button&gt;
+
+&lt;button type="button" class="ev-btn ev-btn-danger"&gt;
+  Delete
+&lt;/button&gt;</code></pre>
+
+      <div class="ev-usage-notes">
+        <h3>Usage notes</h3>
+
+        <ul class="mb-0">
+          <li>Use Primary for the main action on a page or form.</li>
+          <li>Use Secondary for a supporting action.</li>
+          <li>Use Success after a successful operation.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       MOOD BADGES
+       ===================================================== -->
+
+  <section class="ev-window mb-4">
+    <div class="ev-window-titlebar ev-window-titlebar--purple">
+      <span class="ev-window-title">Mood Badges</span>
+
+      <div class="ev-window-controls" aria-hidden="true">
+        <span class="ev-window-control">—</span>
+        <span class="ev-window-control">□</span>
+        <span class="ev-window-control ev-window-control--close">×</span>
+      </div>
+    </div>
+
+    <div class="ev-window-body">
+      <h2 class="ev-section-title">Preview</h2>
+
+      <div class="d-flex flex-wrap gap-2">
+        <span class="ev-mood-badge ev-mood-happy">Happy</span>
+        <span class="ev-mood-badge ev-mood-sad">Sad</span>
+        <span class="ev-mood-badge ev-mood-angry">Angry</span>
+        <span class="ev-mood-badge ev-mood-love">Love</span>
+        <span class="ev-mood-badge ev-mood-surprised">Surprised</span>
+        <span class="ev-mood-badge ev-mood-confused">Confused</span>
+        <span class="ev-mood-badge ev-mood-embarrassed"> Embarrassed </span>
+        <span class="ev-mood-badge ev-mood-playful">Playful</span>
+        <span class="ev-mood-badge ev-mood-neutral">Neutral</span>
+        <span class="ev-mood-badge ev-mood-sleepy">Sleepy</span>
+        <span class="ev-mood-badge ev-mood-cool">Cool</span>
+        <span class="ev-mood-badge ev-mood-respect">Respect</span>
+      </div>
+
+      <h2 class="ev-section-title mt-4">HTML</h2>
+
+      <pre
+        class="ev-code-block"
+      ><code>&lt;span class="ev-mood-badge ev-mood-happy"&gt;
+  Happy
+&lt;/span&gt;
+
+&lt;span class="ev-mood-badge ev-mood-angry"&gt;
+  Angry
+&lt;/span&gt;
+
+&lt;span class="ev-mood-badge ev-mood-respect"&gt;
+  Respect
+&lt;/span&gt;</code></pre>
+
+      <div class="ev-usage-notes">
+        <h3>Usage notes</h3>
+
+        <ul class="mb-0">
+          <li>Always include the base class <code>ev-mood-badge</code>.</li>
+          <li>
+            Add exactly one mood class, such as <code>ev-mood-happy</code>.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
 </main>
 
 <%- include("partials/footer.ejs") %>
