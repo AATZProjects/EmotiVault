@@ -1,0 +1,47 @@
+<%- include("partials/header", {
+  pageTitle: "Login - EmotiVault",
+  currentPage: "login"
+}) %>
+
+<main class="container ev-main">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="ev-window">
+        <div class="ev-window-titlebar">
+          <span class="ev-window-title">Login</span>
+          <div class="ev-window-controls" aria-hidden="true">
+            <span class="ev-window-control">—</span>
+            <span class="ev-window-control">□</span>
+            <span class="ev-window-control ev-window-control--close">×</span>
+          </div>
+        </div>
+
+        <div class="ev-window-body">
+          <form action="/login" method="POST">
+            <div class="mb-3">
+              <label for="username" class="form-label fw-bold">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label fw-bold">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required />
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="ev-btn ev-btn-primary">Login</button>
+            </div>
+          </form>
+
+          <hr class="my-4" />
+
+          <p class="text-center mb-0 ev-muted">
+            Don't have an account? <a href="/signup">Sign up here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include("partials/footer") %>
