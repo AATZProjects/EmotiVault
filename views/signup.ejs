@@ -1,0 +1,52 @@
+<%- include("partials/header", {
+  pageTitle: "Sign Up - EmotiVault",
+  currentPage: "signup"
+}) %>
+
+<main class="container ev-main">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="ev-window">
+        <div class="ev-window-titlebar ev-window-titlebar--purple">
+          <span class="ev-window-title">Sign Up</span>
+          <div class="ev-window-controls" aria-hidden="true">
+            <span class="ev-window-control">—</span>
+            <span class="ev-window-control">□</span>
+            <span class="ev-window-control ev-window-control--close">×</span>
+          </div>
+        </div>
+
+        <div class="ev-window-body">
+          <form action="/signup" method="POST">
+            <div class="mb-3">
+              <label for="username" class="form-label fw-bold">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label fw-bold">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="ev-btn ev-btn-secondary">Create Account</button>
+            </div>
+          </form>
+
+          <hr class="my-4" />
+
+          <p class="text-center mb-0 ev-muted">
+            Already have an account? <a href="/login">Login here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include("partials/footer") %>
