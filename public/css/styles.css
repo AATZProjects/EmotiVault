@@ -535,6 +535,148 @@ p {
 }
 
 /* ==========================================================
+   FORMS
+   ========================================================== */
+
+.ev-form {
+  width: 100%;
+}
+
+.ev-form-group {
+  margin-bottom: 1rem;
+}
+
+.ev-form-group:last-child {
+  margin-bottom: 0;
+}
+
+.ev-form-label {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  color: var(--ev-blue-dark);
+  font-weight: 700;
+}
+
+.ev-form-required {
+  color: var(--ev-red);
+}
+
+.ev-input,
+.ev-select,
+.ev-textarea {
+  display: block;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid #8c9baa;
+  border-radius: var(--ev-radius-sm);
+  color: var(--ev-text);
+  box-shadow:
+    inset 1px 1px 2px rgb(0 0 0 / 10%),
+    0 1px 0 rgb(255 255 255 / 80%);
+  transition:
+    border-color var(--ev-transition),
+    box-shadow var(--ev-transition),
+    background-color var(--ev-transition);
+}
+
+.ev-input,
+.ev-select {
+  min-height: 38px;
+}
+
+.ev-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.ev-input::placeholder,
+.ev-textarea::placeholder {
+  color: #8a8a8a;
+}
+
+.ev-input:hover,
+.ev-select:hover,
+.ev-textarea:hover {
+  border-color: var(--ev-border-dark);
+}
+
+.ev-input:focus,
+.ev-select:focus,
+.ev-textarea:focus {
+  background: #ffffff;
+  border-color: var(--ev-blue-light);
+  outline: none;
+  box-shadow:
+    inset 1px 1px 2px rgb(0 0 0 / 8%),
+    0 0 0 3px rgb(79 139 255 / 22%);
+}
+
+.ev-input:disabled,
+.ev-select:disabled,
+.ev-textarea:disabled {
+  background: #ececec;
+  color: var(--ev-text-muted);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.ev-form-help {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--ev-text-muted);
+  font-size: 0.8rem;
+}
+
+.ev-form-error {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--ev-red);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.ev-input.is-invalid,
+.ev-select.is-invalid,
+.ev-textarea.is-invalid {
+  border-color: var(--ev-red);
+  background: #fff7f7;
+}
+
+.ev-input.is-invalid:focus,
+.ev-select.is-invalid:focus,
+.ev-textarea.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgb(217 70 62 / 18%);
+}
+
+.ev-check-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ev-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.ev-check-input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ev-blue);
+}
+
+.ev-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+/* ==========================================================
     DESIGN TOKEN PREVIEWS
    ========================================================== */
 

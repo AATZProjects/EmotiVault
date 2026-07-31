@@ -366,6 +366,374 @@
       </div>
     </div>
   </section>
+
+  <!-- =====================================================
+     FORMS
+     ===================================================== -->
+
+  <section class="ev-window mb-4">
+    <div class="ev-window-titlebar">
+      <span class="ev-window-title">Forms</span>
+
+      <div class="ev-window-controls" aria-hidden="true">
+        <span class="ev-window-control">—</span>
+        <span class="ev-window-control">□</span>
+        <span class="ev-window-control ev-window-control--close">×</span>
+      </div>
+    </div>
+
+    <div class="ev-window-body">
+      <h2 class="ev-section-title">Preview</h2>
+
+      <div class="row g-4">
+        <!-- Standard form -->
+
+        <div class="col-lg-6">
+          <article class="ev-panel h-100">
+            <div class="ev-panel-header">Standard Form</div>
+
+            <div class="ev-panel-body">
+              <form class="ev-form" action="#" method="post">
+                <div class="ev-form-group">
+                  <label class="ev-form-label" for="example-username">
+                    Username
+                    <span class="ev-form-required">*</span>
+                  </label>
+
+                  <input
+                    id="example-username"
+                    class="ev-input"
+                    type="text"
+                    name="username"
+                    placeholder="Enter a username"
+                    required
+                  />
+
+                  <span class="ev-form-help">
+                    Your username must be unique.
+                  </span>
+                </div>
+
+                <div class="ev-form-group">
+                  <label class="ev-form-label" for="example-password">
+                    Password
+                    <span class="ev-form-required">*</span>
+                  </label>
+
+                  <input
+                    id="example-password"
+                    class="ev-input"
+                    type="password"
+                    name="password"
+                    placeholder="Enter a password"
+                    required
+                  />
+                </div>
+
+                <div class="ev-form-group">
+                  <label class="ev-form-label" for="example-mood"> Mood </label>
+
+                  <select id="example-mood" class="ev-select" name="mood">
+                    <option value="">Select a mood</option>
+                    <option value="Happy">Happy</option>
+                    <option value="Sad">Sad</option>
+                    <option value="Angry">Angry</option>
+                    <option value="Love">Love</option>
+                    <option value="Surprised">Surprised</option>
+                    <option value="Confused">Confused</option>
+                    <option value="Embarrassed">Embarrassed</option>
+                    <option value="Playful">Playful</option>
+                    <option value="Neutral">Neutral</option>
+                    <option value="Sleepy">Sleepy</option>
+                    <option value="Cool">Cool</option>
+                    <option value="Respect">Respect</option>
+                  </select>
+                </div>
+
+                <div class="ev-form-group">
+                  <label class="ev-form-label" for="example-description">
+                    Description
+                  </label>
+
+                  <textarea
+                    id="example-description"
+                    class="ev-textarea"
+                    name="description"
+                    placeholder="Enter a description"
+                  ></textarea>
+                </div>
+
+                <div class="ev-check-group">
+                  <label class="ev-check">
+                    <input
+                      class="ev-check-input"
+                      type="checkbox"
+                      name="favorite"
+                    />
+                    Add to favorites
+                  </label>
+
+                  <label class="ev-check">
+                    <input
+                      class="ev-check-input"
+                      type="checkbox"
+                      name="public"
+                    />
+                    Make public
+                  </label>
+                </div>
+
+                <div class="ev-form-actions">
+                  <button type="submit" class="ev-btn ev-btn-primary">
+                    Submit
+                  </button>
+
+                  <button type="reset" class="ev-btn ev-btn-light">
+                    Reset
+                  </button>
+                </div>
+              </form>
+            </div>
+          </article>
+        </div>
+
+        <!-- Form states -->
+
+        <div class="col-lg-6">
+          <article class="ev-panel h-100">
+            <div class="ev-panel-header ev-panel-header--purple">
+              Form States
+            </div>
+
+            <div class="ev-panel-body">
+              <div class="ev-form-group">
+                <label class="ev-form-label" for="invalid-username">
+                  Invalid Input
+                </label>
+
+                <input
+                  id="invalid-username"
+                  class="ev-input is-invalid"
+                  type="text"
+                  value="admin"
+                  aria-describedby="username-error"
+                  aria-invalid="true"
+                />
+
+                <span id="username-error" class="ev-form-error">
+                  This username is already in use.
+                </span>
+              </div>
+
+              <div class="ev-form-group">
+                <label class="ev-form-label" for="disabled-input">
+                  Disabled Input
+                </label>
+
+                <input
+                  id="disabled-input"
+                  class="ev-input"
+                  type="text"
+                  value="This field cannot be edited"
+                  disabled
+                />
+              </div>
+
+              <div class="ev-form-group">
+                <label class="ev-form-label" for="disabled-select">
+                  Disabled Select
+                </label>
+
+                <select id="disabled-select" class="ev-select" disabled>
+                  <option>Classic</option>
+                </select>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <h2 class="ev-section-title mt-4">HTML</h2>
+
+      <pre class="ev-code-block"><code>&lt;form class="ev-form"&gt;
+  &lt;div class="ev-form-group"&gt;
+    &lt;label class="ev-form-label" for="username"&gt;
+      Username
+      &lt;span class="ev-form-required"&gt;*&lt;/span&gt;
+    &lt;/label&gt;
+
+    &lt;input
+      id="username"
+      class="ev-input"
+      type="text"
+      name="username"
+      placeholder="Enter a username"
+      required
+    /&gt;
+
+    &lt;span class="ev-form-help"&gt;
+      Your username must be unique.
+    &lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class="ev-form-group"&gt;
+    &lt;label class="ev-form-label" for="mood"&gt;
+      Mood
+    &lt;/label&gt;
+
+    &lt;select id="mood" class="ev-select" name="mood"&gt;
+      &lt;option value=""&gt;Select a mood&lt;/option&gt;
+      &lt;option value="Happy"&gt;Happy&lt;/option&gt;
+      &lt;option value="Sad"&gt;Sad&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+
+  &lt;div class="ev-form-actions"&gt;
+    &lt;button class="ev-btn ev-btn-primary" type="submit"&gt;
+      Submit
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+
+      <div class="ev-usage-notes">
+        <h3>Usage notes</h3>
+
+        <ul class="mb-0">
+          <li>
+            Use <code>ev-input</code> for text, password, email, number, and
+            search fields.
+          </li>
+
+          <li>Use <code>ev-select</code> for dropdown menus.</li>
+
+          <li>Use <code>ev-textarea</code> for longer text.</li>
+
+          <li>Use <code>ev-form-help</code> for optional instructions.</li>
+
+          <li>
+            Add <code>is-invalid</code> and <code>ev-form-error</code> when
+            validation fails.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+     SEARCH & FILTER FORM
+     ===================================================== -->
+
+  <section class="ev-window mb-4">
+    <div class="ev-window-titlebar">
+      <span class="ev-window-title">Search & Filter Forms</span>
+
+      <div class="ev-window-controls" aria-hidden="true">
+        <span class="ev-window-control">—</span>
+        <span class="ev-window-control">□</span>
+        <span class="ev-window-control ev-window-control--close">×</span>
+      </div>
+    </div>
+
+    <div class="ev-window-body">
+      <h2 class="ev-section-title">Preview</h2>
+
+      <form action="#" method="get">
+        <div class="row g-3 align-items-end">
+          <div class="col-lg-5">
+            <label class="ev-form-label" for="search"> Search </label>
+
+            <input
+              id="search"
+              class="ev-input"
+              type="search"
+              placeholder="Search emoticons..."
+            />
+          </div>
+
+          <div class="col-md-4 col-lg-3">
+            <label class="ev-form-label" for="category"> Category </label>
+
+            <select id="category" class="ev-select">
+              <option>All Categories</option>
+              <option>Classic</option>
+              <option>Upright</option>
+              <option>Unicode</option>
+              <option>Kaomoji</option>
+              <option>Misc</option>
+              <option>2Channel</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 col-lg-2">
+            <label class="ev-form-label" for="mood"> Mood </label>
+
+            <select id="mood" class="ev-select">
+              <option>All Moods</option>
+              <option>Happy</option>
+              <option>Sad</option>
+              <option>Angry</option>
+              <option>Love</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 col-lg-2">
+            <button class="ev-btn ev-btn-primary w-100" type="submit">
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <h2 class="ev-section-title mt-4">HTML</h2>
+
+      <pre class="ev-code-block"><code>&lt;form&gt;
+
+  &lt;input
+      class="ev-input"
+      type="search"
+      name="search"
+      placeholder="Search..."
+  &gt;
+
+  &lt;select
+      class="ev-select"
+      name="category"&gt;
+
+      &lt;option&gt;Classic&lt;/option&gt;
+
+  &lt;/select&gt;
+
+  &lt;select
+      class="ev-select"
+      name="mood"&gt;
+
+      &lt;option&gt;Happy&lt;/option&gt;
+
+  &lt;/select&gt;
+
+  &lt;button
+      class="ev-btn ev-btn-primary"
+      type="submit"&gt;
+
+      Search
+
+  &lt;/button&gt;
+
+&lt;/form&gt;</code></pre>
+
+      <div class="ev-usage-notes">
+        <h3>Usage Notes</h3>
+
+        <ul class="mb-0">
+          <li>Use <code>ev-input</code> for text and search fields.</li>
+
+          <li>Use <code>ev-select</code> for dropdown filters.</li>
+
+          <li>Keep the Search button aligned with the inputs.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 </main>
 
 <%- include("partials/footer.ejs") %>
