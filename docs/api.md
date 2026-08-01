@@ -13,15 +13,15 @@ Read the documentation for specific APIs to see their intended domain of input p
 # Errors
 If you use an API and pass in invalid arguments, you will receive an error response with data name `error`. It will return a String detailing the reason why the call failed. No emoticon will be returned.
 
-Refer to the [emoticonId API table](#emoticonsemoticonid) to see an example of an error in the output.
+Refer to the [emoticonId API table](#emoticonemoticonid) to see an example of an error in the output.
 
 # APIs
-1. [/emoticons/{emoticonId}](#emoticonsemoticonid)
+1. [/emoticon/{emoticonId}](#emoticonemoticonid)
 2. [/emoticons/all](#emoticonsall)
 3. [/emoticons/filter](#emoticonsfilter)
 4. [/emoticon-of-the-day](#emoticon-of-the-day)
 
-# /emoticons/{emoticonId}
+# /emoticon/{emoticonId}
 Returns all information of an emoticon given its ID.
 
 If the input is empty or out of range, an error will return.
@@ -36,9 +36,9 @@ Requesting an Emoticon given its ID will return the following information:
 
 | Parameter | Example | Output |
 | :---: | :---: | :---: |
-| **emoticonId** | /api/emoticons/**21** | {"emoticonId": 21,<br>"emoticonName": "Classic Happy 2",<br>"emoticonString": ":)",<br>"emoticonCategory": "Classic",<br>"emoticonMood": "Happy"} |
-| **No Args** | /api/emoticons/ | {"error": "ERROR: Emoticon ID can not be empty."} |
-| **emoticonId** | /api/emoticons/**-1** | {"error": "ERROR: Emoticon ID is not in range."} |
+| **emoticonId** | /api/emoticon/**21** | {"emoticonId": 21,<br>"emoticonName": "Classic Happy 2",<br>"emoticonString": ":)",<br>"emoticonCategory": "Classic",<br>"emoticonMood": "Happy"} |
+| **No Args** | /api/emoticon/ | {"error": "ERROR: Emoticon ID can not be empty."} |
+| **emoticonId** | /api/emoticon/**-1** | {"error": "ERROR: Emoticon ID is not in range."} |
 
 # /emoticons/all
 Returns the list of emoticons, sorted by emoticon ID by default. 
