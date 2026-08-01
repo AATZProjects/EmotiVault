@@ -144,8 +144,8 @@ async function getEmoticonObject(emoticonId) {
   return emoticonObj;
 }
 
-// /api/emoticons/{emoticonId}
-app.get('/api/emoticons/emoticon/:emoticonId', async (req, res) => {
+// /api/emoticon/{emoticonId}
+app.get('/api/emoticon/:emoticonId', async (req, res) => {
   try {
     let emoticonId = Number(req.params.emoticonId);
 
