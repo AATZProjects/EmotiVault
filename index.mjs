@@ -121,7 +121,7 @@ function generateError(res, errorMsg) {
   res.json(msg);
 }
 
-// Helper function to generate emoticon object
+// Helper function to generate emoticon object - MUST `AWAIT` THIS FUNCTION
 async function getEmoticonObject(emoticonId) {
   emoticonId = Number(emoticonId);
   
@@ -145,7 +145,7 @@ async function getEmoticonObject(emoticonId) {
 }
 
 // /api/emoticons/{emoticonId}
-app.get('/api/emoticons/:emoticonId', async (req, res) => {
+app.get('/api/emoticons/emoticon/:emoticonId', async (req, res) => {
   try {
     let emoticonId = Number(req.params.emoticonId);
 
@@ -185,6 +185,39 @@ app.get('/api/emoticons/:emoticonId', async (req, res) => {
   }
 
 }); 
+
+// /api/emoticons/all
+app.get('/api/emoticons/all', async (req, res) => {
+  
+  // Get a list of ALL emoticons, ordered by emoticon ID
+  let [rows] = await pool.query(`
+    SELECT e.emoticonId, emoticonName, emoticonString, emoticonCategory, emoticonMood, COUNT(f.emoticonId) AS emoticonFavorites
+    FROM emoticons e
+    LEFT JOIN userFavorites f ON f.emoticonId = e.emoticonId
+    GROUP BY emoticonId
+    ORDER BY emoticonId ASC;
+    `);
+  let emoticons = [];
+
+  
+  for (let i = 0; i < rows.length; i++) {
+    let emoticon = rows[i];
+
+    const emoticonObject = {
+      emoticonId: emoticon.emoticonId,
+      emoticonName: emoticon.emoticonName,
+      emoticonString: emoticon.emoticonString,
+      emoticonCategory: emoticon.emoticonCategory,
+      emoticonMood: emoticon.emoticonMood,
+      emoticonFavorites: emoticon.emoticonFavorites
+    };
+
+    emoticons.push(emoticonObject);
+  }
+
+
+  res.json(emoticons);
+});
 
 /*
  *  === ^^^ EMOTICONS API ^^^ ===
