@@ -199,73 +199,195 @@ try {
     GROUP BY emoticonId
     ORDER BY emoticonId ASC;
     `);
-  let emoticons = [];
-
-  // Nullish Coalesce - uses value on the right if lhs is invalid/null
-  let limit = 20;   // If no limit is specified, use the default page count
-  let page = 1;
-  let startIndex = 0;
-
-  // If we're given a page number, then use the limit as a page count, the default will be 20
-  if (req.query.page !== undefined) {
-
-    if (req.query.limit !== undefined) {
-      limit = Number(req.query.limit);
-
-      if (limit === null || isNaN(limit)) {
-        generateError(res, "Limit is invalid.");
-        return;
-      }
-    }
-
-    // Only return `limit` # of elements starting from index (page - 1) * limit
-    page = Number(req.query.page);
-    if (page === null || isNaN(page)) {
-        generateError(res, "Page is invalid.");
-        return;
-      }
-
-    startIndex = (page - 1) * limit; 
-  } else {
-    limit = Number(req.query.limit ?? rows.length);    // Since we're not using pagination, return all elements
-
-    if (limit === null || isNaN(limit)) {
-        generateError(res, "Limit is invalid.");
-        return;
-      }
-  }
-
-  // Calculate page count
-  let pageCount = Math.ceil(rows.length / limit);
-
   
-  for (let i = startIndex; i < (startIndex + limit); i++) {
-    if (i >= rows.length) {
-      break;
-    }
-    
-    let emoticon = rows[i];
-
-    const emoticonObject = {
-      emoticonId: emoticon.emoticonId,
-      emoticonName: emoticon.emoticonName,
-      emoticonString: emoticon.emoticonString,
-      emoticonCategory: emoticon.emoticonCategory,
-      emoticonMood: emoticon.emoticonMood,
-      emoticonFavorites: emoticon.emoticonFavorites
-    };
-
-    emoticons.push(emoticonObject);
-  }
-
-
-  res.json({"num_pages": pageCount, "emoticons": emoticons});
+    apiPaginate(rows, req, res);
 
 } catch (error) {
   console.error(error);
   generateError(res, "Undefined Error.");
 }
 });
+
+// /api/emoticons/filter
+app.get('/api/emoticons/filter', async (req, res) => {
+
+  try {
+    // Query Selection based on parameters
+    let sortBy = req.query.sortBy;
+    let sqlSortString = "";
+
+    // =sortBy Filter
+    switch(sortBy) {
+      case "category":
+        sqlSortString = "emoticonCategory, emoticonId ASC";
+        break;
+      case "mood":
+        sqlSortString = "emoticonMood, emoticonId ASC";
+        break;
+      case "popular":
+        sqlSortString = "emoticonFavorites DESC, emoticonId ASC"
+        break;
+      case "leastPopular":
+        sqlSortString = "emoticonFavorites ASC, emoticonId ASC"
+      default:
+        sqlSortString = "emoticonId ASC";
+        break;
+    }
+
+    // WHERE Builder
+    let whereString = "";
+
+    // Category Filter
+    let category = req.query.category;
+    switch(category) {
+      case "classic":
+        whereString += `(emoticonCategory = "Classic") AND `;
+        break;
+      case "upright":
+        whereString += `(emoticonCategory = "Upright") AND `;
+        break;
+      case "unicode":
+        whereString += `(emoticonCategory = "Unicode") AND `;
+        break;
+      case "kaomoji":
+        whereString += `(emoticonCategory = "Kaomoji") AND `;
+        break;
+      case "misc":
+        whereString += `(emoticonCategory = "Misc") AND `;
+        break;
+      case "2channel":
+        whereString += `(emoticonCategory = "2Channel") AND `;
+        break;
+    }
+
+    // Mood Filter
+    let mood = req.query.mood;
+
+    switch(mood) {
+      case "happy":
+        whereString += `(emoticonMood = "Happy") AND `;
+        break;
+      case "sad":
+        whereString += `(emoticonMood = "Sad") AND `;
+        break;
+      case "angry":
+        whereString += `(emoticonMood = "Angry") AND `;
+        break;
+      case "love":
+        whereString += `(emoticonMood = "Love") AND `;
+        break;
+      case "surprised":
+      whereString += `(emoticonMood = "Surprised") AND `;
+        break;
+      case "confused":
+        whereString += `(emoticonMood = "Confused") AND `;
+        break;
+      case "embarrassed":
+        whereString += `(emoticonMood = "Embarrased") AND `;
+        break;
+      case "playful":
+        whereString += `(emoticonMood = "Playful") AND `;
+        break;
+      case "neutral":
+        whereString += `(emoticonMood = "Neutral") AND `;
+        break;
+      case "sleepy":
+        whereString += `(emoticonMood = "Sleepy") AND `;
+        break;
+      case "cool":
+        whereString += `(emoticonMood = "Cool") AND `;
+        break;
+      case "respect":
+        whereString += `(emoticonMood = "Respect") AND `;
+        break;
+    }
+
+    // Set WHERE to true as an extra condition. It guarantees at least "WHERE TRUE" in case no other filters are applied
+    whereString += "TRUE";
+
+    let sql = `
+      SELECT e.emoticonId, emoticonName, emoticonString, emoticonCategory, emoticonMood, COUNT(f.emoticonId) AS emoticonFavorites
+      FROM emoticons e
+      LEFT JOIN userFavorites f ON f.emoticonId = e.emoticonId
+      WHERE ${whereString}
+      GROUP BY emoticonId
+      ORDER BY ${sqlSortString}`;
+
+    // Get a list of ALL emoticons, ordered by emoticon ID
+    let [rows] = await pool.query(sql);
+
+    apiPaginate(rows, req, res);
+
+  } catch (error) {
+    console.error(error);
+    generateError(res, "Undefined Error.");
+  }
+});
+
+
+// This helper function takes an SQL-returned amount of rows, the request, and response values of the API to render out only the needed amount of information
+function apiPaginate(rows, req, res) {
+  let emoticons = [];
+
+    // Nullish Coalesce - uses value on the right if lhs is invalid/null
+    let limit = 20;   // If no limit is specified, use the default page count
+    let page = 1;
+    let startIndex = 0;
+
+    // If we're given a page number, then use the limit as a page count, the default will be 20
+    if (req.query.page !== undefined) {
+
+      if (req.query.limit !== undefined) {
+        limit = Number(req.query.limit);
+
+        if (limit === null || isNaN(limit)) {
+          generateError(res, "Limit is invalid.");
+          return;
+        }
+      }
+
+      // Only return `limit` # of elements starting from index (page - 1) * limit
+      page = Number(req.query.page);
+      if (page === null || isNaN(page)) {
+          generateError(res, "Page is invalid.");
+          return;
+        }
+
+      startIndex = (page - 1) * limit; 
+    } else {
+      limit = Number(req.query.limit ?? rows.length);    // Since we're not using pagination, return all elements
+
+      if (limit === null || isNaN(limit)) {
+          generateError(res, "Limit is invalid.");
+          return;
+        }
+    }
+
+    // Calculate page count
+    let pageCount = Math.ceil(rows.length / limit);
+
+    
+    for (let i = startIndex; i < (startIndex + limit); i++) {
+      if (i >= rows.length) {
+        break;
+      }
+      
+      let emoticon = rows[i];
+
+      const emoticonObject = {
+        emoticonId: emoticon.emoticonId,
+        emoticonName: emoticon.emoticonName,
+        emoticonString: emoticon.emoticonString,
+        emoticonCategory: emoticon.emoticonCategory,
+        emoticonMood: emoticon.emoticonMood,
+        emoticonFavorites: emoticon.emoticonFavorites
+      };
+
+      emoticons.push(emoticonObject);
+    }
+
+    res.json({"num_pages": pageCount, "emoticons": emoticons});
+}
 
 /*
  *  === ^^^ EMOTICONS API ^^^ ===

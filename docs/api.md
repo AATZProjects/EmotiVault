@@ -145,7 +145,7 @@ These are the allowed values and their outputs.
 ?sortBy=**___** | Result
 :---: | :---:
 emoticonId | Emoticons are ordered by their IDs ascending.<br>This is the default sort method when calling [.../all/](#emoticonsall) and [.../filter/](#emoticonsfilter).
-category | Emoticons are sorted by their category, descending alphabetically (A -> Z).
-mood | Emoticons are sorted by their mood, descending alphabetically (A -> Z).
+category | Emoticons are sorted by their category alphabetically (A -> Z).
+mood | Emoticons are sorted by their mood alphabetically (A -> Z).
 popular | Emoticons are ordered using their Favorites count, descending numerically (Greatest to Least).
 leastPopular | Emoticons are ordered using their Favorites count, ascending numerically (Least to Greatest).
