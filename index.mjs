@@ -121,14 +121,37 @@ function generateError(res, errorMsg) {
   res.json(msg);
 }
 
+// Helper function to generate emoticon object
+async function getEmoticonObject(emoticonId) {
+  emoticonId = Number(emoticonId);
+  
+  let [rows] = await pool.query(`SELECT * FROM emoticons WHERE emoticonId = ?`, emoticonId);
+
+  let emoticon = rows[0];
+
+  [rows] = await pool.query(`SELECT COUNT(emoticonId) AS emoticonFavorites FROM userFavorites WHERE emoticonId = ?`, emoticonId);
+  let emoticonFavoritesValue = rows[0].emoticonFavorites;
+
+  const emoticonObj = {
+    emoticonId: emoticonId,
+    emoticonName: emoticon.emoticonName,
+    emoticonString: emoticon.emoticonString,
+    emoticonCategory: emoticon.emoticonCategory,
+    emoticonMood: emoticon.emoticonMood,
+    emoticonFavorites: emoticonFavoritesValue
+  };
+
+  return emoticonObj;
+}
+
 // /api/emoticons/{emoticonId}
 app.get('/api/emoticons/:emoticonId', async (req, res) => {
   try {
     let emoticonId = Number(req.params.emoticonId);
 
     // === Range checks for argument ===
-    if (emoticonId === null || emoticonId === "") {
-      generateError(res, "Missing emoticonID!");
+    if (emoticonId === null || emoticonId === "" || isNaN(emoticonId)) {
+      generateError(res, "Missing or Invalid emoticonID!");
       return;
     }
 
@@ -154,20 +177,7 @@ app.get('/api/emoticons/:emoticonId', async (req, res) => {
       return;
     }
 
-    let emoticon = rows[0];
-
-    [rows] = await pool.query(`SELECT COUNT(emoticonId) AS emoticonFavorites FROM userFavorites WHERE emoticonId = ?`, emoticonId);
-    let emoticonFavoritesValue = rows[0].emoticonFavorites;
-
-
-    res.json({
-      emoticonId: emoticonId,
-      emoticonName: emoticon.emoticonName,
-      emoticonString: emoticon.emoticonString,
-      emoticonCategory: emoticon.emoticonCategory,
-      emoticonMood: emoticon.emoticonMood,
-      emoticonFavorites: emoticonFavoritesValue
-    });
+    res.json(await getEmoticonObject(emoticonId));
 
   } catch (error) {
     console.error(error);
@@ -175,6 +185,10 @@ app.get('/api/emoticons/:emoticonId', async (req, res) => {
   }
 
 }); 
+
+/*
+ *  === ^^^ EMOTICONS API ^^^ ===
+*/
 
 app.listen(3000, () => {
   console.log('Express server running');
