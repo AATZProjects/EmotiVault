@@ -17,7 +17,6 @@
           <!-- Left-side form -->
           <section class="col-lg-7">
             <form class="ev-form aim-generator-form" id="aimStatusForm">
-
               <!-- Step 1 -->
               <fieldset class="aim-form-step">
                 <legend class="aim-step-title">
@@ -26,15 +25,27 @@
 
                 <div class="aim-song-entry">
                   <div class="aim-song-fields">
-                    <label class="aim-icon-input" for="songTitle">
-                      <input id="songTitle" class="ev-input aim-text-input" type="text" name="songTitle"
-                        placeholder="Enter a song title" autocomplete="off" required />
-                    </label>
 
-                    <label class="aim-icon-input" for="artistName">
-                      <input id="artistName" class="ev-input aim-text-input" type="text" name="artistName"
-                        placeholder="Enter an artist" autocomplete="off" required />
-                    </label>
+                    <div class="aim-input-wrapper">
+                      <label class="aim-icon-input" for="songTitle">
+                        <input id="songTitle" class="ev-input aim-text-input" type="text" name="songTitle"
+                          placeholder="Enter a song title" autocomplete="off" aria-describedby="songTitleError"
+                          required />
+                      </label>
+
+                      <span id="songTitleError" class="ev-form-error" hidden></span>
+                    </div>
+
+                    <div class="aim-input-wrapper">
+                      <label class="aim-icon-input" for="artistName">
+                        <input id="artistName" class="ev-input aim-text-input" type="text" name="artistName"
+                          placeholder="Enter an artist" autocomplete="off" aria-describedby="artistNameError"
+                          required />
+                      </label>
+
+                      <span id="artistNameError" class="ev-form-error" hidden></span>
+                    </div>
+
                   </div>
 
                   <button class="ev-btn ev-btn-primary aim-lyrics-button" type="button" id="getLyricsButton">
@@ -50,30 +61,7 @@
                 </legend>
 
                 <div class="aim-lyric-list" id="generatedLyrics" role="radiogroup" aria-label="Generated lyrics">
-                  <label class="aim-lyric-option">
-                    <input type="radio" name="selectedLyric" value="I walk a lonely road..." checked />
-                    <span>I walk a lonely road...</span>
-                  </label>
-
-                  <label class="aim-lyric-option">
-                    <input type="radio" name="selectedLyric" value="The only one that I have ever known" />
-                    <span>The only one that I have ever known</span>
-                  </label>
-
-                  <label class="aim-lyric-option">
-                    <input type="radio" name="selectedLyric" value="Don't know where it goes" />
-                    <span>Don’t know where it goes</span>
-                  </label>
-
-                  <label class="aim-lyric-option">
-                    <input type="radio" name="selectedLyric" value="But it's home to me and I walk alone" />
-                    <span>But it’s home to me and I walk alone</span>
-                  </label>
-
-                  <label class="aim-lyric-option">
-                    <input type="radio" name="selectedLyric" value="I walk this empty street" />
-                    <span>I walk this empty street</span>
-                  </label>
+                  <p class="ev-muted aim-lyrics-message">Enter a song and artist to get lyrics...</p>
                 </div>
               </fieldset>
 
@@ -190,7 +178,7 @@
                   <h6 class="aim-preview-heading">Away Message:</h6>
 
                   <div class="aim-away-box">
-                    <p id="previewLyric">I walk a lonely road...</p>
+                    <p id="previewLyric"></p>
                     <p id="previewEmoticon">T_T</p>
                   </div>
                 </div>
@@ -200,7 +188,7 @@
                   <h6 class="aim-preview-heading">Listening to:</h6>
 
                   <div class="aim-listening">
-                    <span id="previewArtist">Green Day</span>
+                    <span id="previewArtist"></span>
                     <span class="aim-listening-note" aria-hidden="true">♫</span>
                   </div>
                 </div>
@@ -212,7 +200,7 @@
         </div>
       </div>
     </div>
-    </div>
   </main>
 
+  <script src="/js/aim-status-generator.js"></script>
   <%- include("partials/footer") %>
