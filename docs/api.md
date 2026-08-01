@@ -82,6 +82,16 @@ The `/emoticons/filter` API is unique as it is also able to filter emoticons by 
 **sortBy=** | .../filter?**sortBy=popular** | All emoticons in order from Most Popular to Least Popular (most favorites).
 **search=** | .../filter?**search=smile** | All emoticons which the mood, category, or internal name contain the word "smile". 
 
+Here are examples of the filters being used in conjunction with pagination:
+
+|                            Example                            |                                        Notes                                         |
+|:-------------------------------------------------------------:|:------------------------------------------------------------------------------------:|
+|     api/emoticons/filter?page=1&limit=10&category=classic     | The "limit" field is optional and if let out then the default limit of 20 will apply |
+| api/emoticons/filter?category=kaomoji&mood=shock&search=smile |            Since no page number is specified, this will return ALL items             |
+|          api/emoticons/filter?sortBy=category&page=3          |  This specifies the sortBy manually and shows page 3 using the default limit of 20   |
+
+You can use any combination and order of filters, simply separate each parameter with '&'.
+
 For a complete list of all possible categories, moods, and orders, refer to [the Emoticon Fields table.](#emoticon-fields)
 
 # /emoticon-of-the-day

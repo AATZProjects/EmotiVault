@@ -228,7 +228,8 @@ app.get('/api/emoticons/filter', async (req, res) => {
         sqlSortString = "emoticonFavorites DESC, emoticonId ASC"
         break;
       case "leastPopular":
-        sqlSortString = "emoticonFavorites ASC, emoticonId ASC"
+        sqlSortString = "emoticonFavorites ASC, emoticonId ASC";
+        break;
       default:
         sqlSortString = "emoticonId ASC";
         break;
