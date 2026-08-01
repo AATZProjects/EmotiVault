@@ -102,6 +102,80 @@ app.get('/dbTest', async (req, res) => {
   }
 }); //dbTest
 
+/* 
+ *  === Emoticons APIs ===    
+ *  Following conventions from the docs/api.md documentation
+ */
+
+// Helper function to generate json error
+function generateError(res, errorMsg) {
+  let errorsub = "ERROR: ";
+  if (!errorMsg.includes(errorsub)) {
+    errorMsg = errorsub + errorMsg;
+  }
+  
+  const msg = {
+    error: errorMsg
+  };
+
+  res.json(msg);
+}
+
+// /api/emoticons/{emoticonId}
+app.get('/api/emoticons/:emoticonId', async (req, res) => {
+  try {
+    let emoticonId = Number(req.params.emoticonId);
+
+    // === Range checks for argument ===
+    if (emoticonId === null || emoticonId === "") {
+      generateError(res, "Missing emoticonID!");
+      return;
+    }
+
+    let [rows] =  await pool.query(`SELECT min(emoticonId) AS minID FROM emoticons`);
+    let minID = rows[0].minID;
+
+    [rows]  = await pool.query(`SELECT max(emoticonId) AS maxID FROM emoticons`);
+    let maxID = rows[0].maxID;
+
+    if (emoticonId < minID || emoticonId > maxID) {
+      generateError(res, "Provided emoticonID is not in range!");
+      return;
+    }
+    // === === === === === === === === =
+
+
+    // Return JSON object of emoticon
+
+    [rows] = await pool.query(`SELECT * FROM emoticons WHERE emoticonId = ?`, emoticonId);
+
+    if (rows.length === 0) {
+      generateError("No emoticon exists with ID: " + emoticonId);
+      return;
+    }
+
+    let emoticon = rows[0];
+
+    [rows] = await pool.query(`SELECT COUNT(emoticonId) AS emoticonFavorites FROM userFavorites WHERE emoticonId = ?`, emoticonId);
+    let emoticonFavoritesValue = rows[0].emoticonFavorites;
+
+
+    res.json({
+      emoticonId: emoticonId,
+      emoticonName: emoticon.emoticonName,
+      emoticonString: emoticon.emoticonString,
+      emoticonCategory: emoticon.emoticonCategory,
+      emoticonMood: emoticon.emoticonMood,
+      emoticonFavorites: emoticonFavoritesValue
+    });
+
+  } catch (error) {
+    console.error(error);
+    generateError(res, "Undefined Error.");
+  }
+
+}); 
+
 app.listen(3000, () => {
   console.log('Express server running');
 });
