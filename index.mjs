@@ -198,10 +198,12 @@ app.get('/dbTest', async (req, res) => {
   }
 }); //dbTest
 
-/* 
- *  === Emoticons APIs ===    
- *  Following conventions from the docs/api.md documentation
- */
+/*
+=============================================
+   Emoticons APIs
+   Following conventions from the docs/api.md documentation
+=============================================
+*/
 
 // Helper function to generate json error
 function generateError(res, errorMsg) {
@@ -261,7 +263,6 @@ app.get('/api/emoticon/:emoticonId', async (req, res) => {
       generateError(res, "Provided emoticonID is not in range!");
       return;
     }
-    // === === === === === === === === =
 
 
     // Return JSON object of emoticon
