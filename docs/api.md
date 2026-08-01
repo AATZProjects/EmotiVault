@@ -47,10 +47,13 @@ You are able to specify a `limit` to the data if you don't want to receive the e
 
 Alternatively, you can rely on the APIs pagination in which the API will return the data in pages. You can access this by using the `page` parameter. The default size of a page is **20 items** but this can be manually adjusted using the `limit` parameter, in case you want to make the design friendly for smaller screens and interfaces.
 
-The output of the JSON will be an array of results, each result will contain all information of the emoticon:
+When using pagination, the first item in the JSON output will be the total number of pages. The second value will be the array of emoticons.
+
+The output of the JSON will be an array of emoticons, each index will contain all information of the emoticon:
 
 ```
-emoticonId:
+num_pages
+arrayIndex:
     - emoticonId
     - emoticonName
     - emoticonString
@@ -61,9 +64,9 @@ emoticonId:
 
 | Parameter | Example | Output |
 | :---: | :---: | :---: |
-| **No Args** | /api/emoticons/all | {1 {...}, 2 {...}, 3 {...}, 4 {...}, -> size{...}} |
-| **page=** | /api/emoticons/all?**page=2** | {21 {...}, 22 {...}, -> 40 {...}} |
-|**limit=** | /api/emoticons/all?page=3&**limit=2** | {5 {...}, 6 {...}} |
+| **No Args** | /api/emoticons/all | [{1 {...}, 2 {...}, 3 {...}, 4 {...}, -> size{...}}] |
+| **page=** | /api/emoticons/all?**page=2** | [{21 {...}, 22 {...}, -> 40 {...}}] |
+|**limit=** | /api/emoticons/all?page=3&**limit=2** | [{5 {...}, 6 {...}}] |
 
 # /emoticons/filter
 The Emoticons Filter API works similarly to the [/emoticons/all](#emoticonsall) API in the sense that it returns a bulk list of emoticons in the same formatting and can be filtered using pagination and return limits, but also carries its own set of filters and ordering conventions.

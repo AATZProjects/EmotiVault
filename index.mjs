@@ -188,7 +188,9 @@ app.get('/api/emoticons/emoticon/:emoticonId', async (req, res) => {
 
 // /api/emoticons/all
 app.get('/api/emoticons/all', async (req, res) => {
-  
+
+try {
+
   // Get a list of ALL emoticons, ordered by emoticon ID
   let [rows] = await pool.query(`
     SELECT e.emoticonId, emoticonName, emoticonString, emoticonCategory, emoticonMood, COUNT(f.emoticonId) AS emoticonFavorites
@@ -199,8 +201,49 @@ app.get('/api/emoticons/all', async (req, res) => {
     `);
   let emoticons = [];
 
+  // Nullish Coalesce - uses value on the right if lhs is invalid/null
+  let limit = 20;   // If no limit is specified, use the default page count
+  let page = 1;
+  let startIndex = 0;
+
+  // If we're given a page number, then use the limit as a page count, the default will be 20
+  if (req.query.page !== undefined) {
+
+    if (req.query.limit !== undefined) {
+      limit = Number(req.query.limit);
+
+      if (limit === null || isNaN(limit)) {
+        generateError(res, "Limit is invalid.");
+        return;
+      }
+    }
+
+    // Only return `limit` # of elements starting from index (page - 1) * limit
+    page = Number(req.query.page);
+    if (page === null || isNaN(page)) {
+        generateError(res, "Page is invalid.");
+        return;
+      }
+
+    startIndex = (page - 1) * limit; 
+  } else {
+    limit = Number(req.query.limit ?? rows.length);    // Since we're not using pagination, return all elements
+
+    if (limit === null || isNaN(limit)) {
+        generateError(res, "Limit is invalid.");
+        return;
+      }
+  }
+
+  // Calculate page count
+  let pageCount = Math.ceil(rows.length / limit);
+
   
-  for (let i = 0; i < rows.length; i++) {
+  for (let i = startIndex; i < (startIndex + limit); i++) {
+    if (i >= rows.length) {
+      break;
+    }
+    
     let emoticon = rows[i];
 
     const emoticonObject = {
@@ -216,7 +259,12 @@ app.get('/api/emoticons/all', async (req, res) => {
   }
 
 
-  res.json(emoticons);
+  res.json({"num_pages": pageCount, "emoticons": emoticons});
+
+} catch (error) {
+  console.error(error);
+  generateError(res, "Undefined Error.");
+}
 });
 
 /*
