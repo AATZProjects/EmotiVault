@@ -302,10 +302,32 @@ app.get('/api/emoticons/filter', async (req, res) => {
         break;
     }
 
-    // Set WHERE to true as an extra condition. It guarantees at least "WHERE TRUE" in case no other filters are applied
-    whereString += "TRUE";
+    // Search filter
+    let search = req.query.search;
+    let sql = "";
+    let rows;
 
-    let sql = `
+
+    if (typeof(search) !== 'undefined' && search !== null && search.length >= 1) {
+      search = `%${search}%`;
+
+      sql = `
+      SELECT e.emoticonId, emoticonName, emoticonString, emoticonCategory, emoticonMood, COUNT(f.emoticonId) AS emoticonFavorites
+      FROM emoticons e
+      LEFT JOIN userFavorites f ON f.emoticonId = e.emoticonId
+      WHERE ${whereString} (emoticonName LIKE ? OR emoticonCategory LIKE ? OR emoticonMood LIKE ?)
+      GROUP BY emoticonId
+      ORDER BY ${sqlSortString}`;
+
+
+      [rows] = await pool.query(sql, [search, search, search]);
+
+    } else {
+      // No search filter
+      // Set WHERE to true as an extra condition. It guarantees at least "WHERE TRUE" in case no other filters are applied
+      whereString += "TRUE";
+
+      sql = `
       SELECT e.emoticonId, emoticonName, emoticonString, emoticonCategory, emoticonMood, COUNT(f.emoticonId) AS emoticonFavorites
       FROM emoticons e
       LEFT JOIN userFavorites f ON f.emoticonId = e.emoticonId
@@ -313,8 +335,12 @@ app.get('/api/emoticons/filter', async (req, res) => {
       GROUP BY emoticonId
       ORDER BY ${sqlSortString}`;
 
-    // Get a list of ALL emoticons, ordered by emoticon ID
-    let [rows] = await pool.query(sql);
+
+      // Get a list of ALL emoticons, ordered by emoticon ID
+      [rows] = await pool.query(sql);
+    }
+
+    
 
     apiPaginate(rows, req, res);
 
