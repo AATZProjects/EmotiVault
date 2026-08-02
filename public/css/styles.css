@@ -1308,3 +1308,19 @@ padding-left: 5%;
   background-color: #dcecff;
   border: 2px solid #9baac0;
 }
+
+#suggestions {
+  display: flex;
+  width: 90%;
+  margin: 10px auto;
+}
+
+.tips {
+  background-color: #dcecff;
+  width: 30%;
+}
+
+#tip1 {
+  display: flex;
+  justify-content: space-evenly;
+}
