@@ -677,6 +677,195 @@ p {
 }
 
 /* ==========================================================
+   TABLES
+   ========================================================== */
+
+.ev-table-container {
+  overflow: hidden;
+  border: 1px solid var(--ev-border);
+  border-radius: var(--ev-radius-md);
+  box-shadow: var(--ev-shadow-sm);
+}
+
+.ev-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ev-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  background: linear-gradient(180deg, #fffef9 0%, #ffffff 50%, #fffdf6 100%);
+  color: var(--ev-text);
+}
+
+.ev-table th,
+.ev-table td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.ev-table thead {
+  background: linear-gradient(180deg, #1680ee 0%, #0860d1 45%, #0048b5 100%);
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 25%);
+}
+
+.ev-table thead th {
+  border-bottom: 1px solid #003c98;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ev-table tbody tr {
+  border-bottom: 1px dashed #c2c9d3;
+  transition: background-color var(--ev-transition);
+}
+
+.ev-table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.ev-table tbody tr:hover {
+  background: #eef5ff;
+}
+
+.ev-table-emoticon {
+  font-family: var(--ev-font-monospace);
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ev-table-actions-heading {
+  text-align: center !important;
+}
+
+.ev-table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  white-space: nowrap;
+}
+
+.ev-icon-button {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #202020;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--ev-transition),
+    transform var(--ev-transition);
+}
+
+.ev-icon-button:hover {
+  color: #d9a800;
+  transform: scale(1.08);
+}
+
+.ev-icon-button.is-active {
+  color: var(--ev-yellow);
+  text-shadow:
+    -1px -1px 0 #3c3300,
+    1px -1px 0 #3c3300,
+    -1px 1px 0 #3c3300,
+    1px 1px 0 #3c3300;
+}
+
+/* Purple table variation */
+
+.ev-table-container--purple .ev-table thead {
+  background: linear-gradient(180deg, #a83df0 0%, #8927df 48%, #7020c0 100%);
+}
+
+.ev-table-container--purple .ev-table thead th {
+  border-bottom-color: #6415ad;
+}
+
+/* ==========================================================
+   PAGINATION
+   ========================================================== */
+
+.ev-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(180deg, #f1f7ff 0%, #dceaff 100%);
+  border-top: 1px solid var(--ev-border);
+}
+
+.ev-page-link,
+.ev-page-ellipsis {
+  display: inline-flex;
+  min-width: 36px;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #8aa8d7;
+  border-radius: var(--ev-radius-sm);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ev-page-link {
+  background: linear-gradient(180deg, #ffffff 0%, #e3edfb 100%);
+  color: var(--ev-blue-dark);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 90%),
+    0 1px 2px rgb(0 0 0 / 10%);
+}
+
+.ev-page-link:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #d1e4ff 100%);
+  color: var(--ev-blue);
+  text-decoration: none;
+}
+
+.ev-page-link:focus-visible {
+  outline: 3px solid rgb(79 139 255 / 35%);
+  outline-offset: 2px;
+}
+
+.ev-page-link.is-active {
+  background: linear-gradient(180deg, #1679ec 0%, #034dbd 100%);
+  border-color: #003b9c;
+  color: #ffffff;
+  cursor: default;
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 30%);
+}
+
+.ev-page-link.is-disabled {
+  background: #edf1f6;
+  color: #8b95a3;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.ev-page-ellipsis {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ev-text-muted);
+}
+
+/* ==========================================================
    AIM STATUS GENERATOR
    ========================================================== */
 
