@@ -1274,3 +1274,37 @@ p {
 code {
   color: var(--ev-purple-dark);
 }
+
+/* =================================================================
+   Browse Emoticons
+   ================================================================= */
+#emoticonTable {
+  width: 90%;
+  margin: 0 auto;
+  border: 2px solid #9baac0;
+
+}
+#emoticonTable thead {
+  border: solid #102b9e ;
+  border-radius: 10px;
+}
+
+#emoticonTable th {
+background-color: #102b9e;
+font-weight: 700;
+color: #FFF;
+padding-left: 5%;
+}
+
+#emoticonTable td {
+  padding-left: 5%;
+  border-bottom: 2px solid #9baac0;
+
+}
+
+#page-nav {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #dcecff;
+  border: 2px solid #9baac0;
+}

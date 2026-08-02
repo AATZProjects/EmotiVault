@@ -62,6 +62,10 @@ app.get('/styleguide', (req, res) => {
   });
 });
 
+app.get('/browse', (req, res) => {
+  res.render('emoticons');
+});
+
 /*
 =============================================
   Login/Signup

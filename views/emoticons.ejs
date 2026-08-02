@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/header.ejs')  %>
+<body>
+
+    <h1>Browse Emoticons</h1>
+    <p>Find the perfect emoticon for every mood</p>
+
+    <!-- Filter controls -->
+
+
+    <!-- table -->
+     <main>
+        <table id="emoticonTable">
+            <thead>
+                <tr>
+                    <th>Emoticon</th>
+                    <th>Category</th>
+                    <th>Mood</th>
+                    <th>Favorites</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                <tr>
+                    <!-- Test data -->
+                    <td>:=)</td>
+                    <td>Classic</td>
+                </tr>
+
+            </tbody>
+        </table>
+   
+        <!-- Pagination -->
+        <div id="page-nav">nav stuff goes here</div>
+    </main>
+    <%- include('partials/footer')  %>
+</body>
+</html>
