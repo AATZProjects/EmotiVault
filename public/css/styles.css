@@ -1239,6 +1239,45 @@ p {
 }
 
 /* ==========================================================
+   FAVORITES PAGE
+   ========================================================== */
+
+#favorites-top-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+#star-section img {
+  width: 4rem;
+}
+
+#favorites-header span {
+  font-size: 1.2rem;
+}
+
+#favorites-total-badge {
+  display: block;
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+
+  font-size: 1.2rem;
+  background-color: #caeccf;
+  border-style: solid;
+  border-width: 0.15rem;
+  border-color: #a4c4a8;
+}
+
+#total-favorites-value {
+  color: #2a5734;
+}
+
+
+
+/* ==========================================================
    STYLE GUIDE DOCUMENTATION
    ========================================================== */
 

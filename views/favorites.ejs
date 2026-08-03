@@ -1,0 +1,78 @@
+<%- include("partials/header") -%>
+
+    <main class="container ev-main">
+
+        <!-- Top Banner Section -->
+        <div id="favorites-top-banner">
+            <!-- Leftmost Star Section -->
+            <div id="star-section">
+                <img src="/imgs/emotivault_icon_favorites.svg" alt="" width="45">
+            </div>
+
+            <!-- Stacked Vertically: Header and Subheader -->
+            <div id="favorites-header">
+                <h1>My Favorite Emoticons</h1>
+                <span class="ev-muted">Your saved emoticon collection.</span>
+            </div>
+
+
+            <!-- Rightmost, aligned with Star -->
+            <div id="favorites-total-badge">
+                <!-- TODO: Calculate this value procedurally -->
+                Total Favorites: <span id="total-favorites-value">7</span>
+            </div>
+        </div>
+
+        <!-- Favorites Table -->
+        <div class="ev-table-container--purple">
+            <div class="ev-table-scroll">
+                <table class="ev-table">
+                    <thead>
+                        <tr>
+                            <th>Emoticon</th>
+                            <th>Category</th>
+                            <th>Mood</th>
+                            <th>Date Added</th>
+                            <th class="ev-table-actions-heading">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <!-- TODO: Generate each Table Row procedurally -->
+                        <tr>
+                            <td class="ev-table-emoticon">:-)</td>
+                            <td>Classic (Latin)</td>
+                            <td>Happy</td>
+                            <td>01/24/2024</td>
+                            <td class="ev-table-actions">
+                                <button class="ev-btn ev-btn-danger">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+            <nav class="ev-pagination">
+
+                <a class="ev-page-link is-disabled" href="#">
+                    ‹ Prev
+                </a>
+
+
+                <!-- TODO: Generate Procedurally -->
+                <a class="ev-page-link is-active" href="#">1</a>
+
+
+                <a class="ev-page-link" href="#">Next ›</a>
+            </nav>
+        </div>
+
+    </main>
+
+
+    <%- include("partials/footer") %>

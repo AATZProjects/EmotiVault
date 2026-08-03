@@ -62,6 +62,13 @@ app.get('/styleguide', (req, res) => {
   });
 });
 
+app.get('/favorites', (req, res) => {
+  res.render('favorites', {
+    pageTitle: 'Favorites',
+    currentPage: 'favorites',
+  });
+});
+
 /*
 =============================================
   Login/Signup
