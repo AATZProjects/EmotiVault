@@ -278,6 +278,31 @@ app.get('/dbTest', async (req, res) => {
 
 /*
 =============================================
+  User Favorites APIs
+=============================================
+*/
+
+app.get('/api/userFavorites/:userId', async (req, res) => {
+  try {
+    let sql = `SELECT emoticonId, DATE_FORMAT(likedDate, "%m/%d/%Y") AS likedDate FROM userFavorites WHERE userId = ?`;
+    let userId = req.params.userId;
+    let params = [userId];
+
+    let [emoticons] = await pool.query(sql, params);
+
+    sql = `SELECT COUNT(userId) AS count FROM userFavorites WHERE userId = ?`;
+    let [countRow] = await pool.query(sql, params);
+
+    res.json({"emoticons": emoticons, "likeCount": countRow[0].count});
+
+  } catch (error) {
+    console.log(error);
+    res.json({"error": error});
+  }
+});
+
+/*
+=============================================
    Emoticons APIs
    Following conventions from the docs/api.md documentation
 =============================================
