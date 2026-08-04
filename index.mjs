@@ -30,8 +30,64 @@ const mockUsers = [{ username: 'admin', password: 'password123' }];
   Routes
 =============================================
 */
-app.get('/', (req, res) => {
-  res.send('Hello Express app!');
+// Home page
+app.get(['/', '/home'], async (req, res) => {
+  try {
+    // 1. Calculate the current day of the year (1 - 366) for daily rotation
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    // 2. Fetch total count of emoticons
+    const [countRows] = await pool.query('SELECT COUNT(*) AS total FROM emoticons');
+    const totalEmoticons = countRows[0]?.total || 1;
+
+    // 3. Modulo operator for seamless daily wrapping
+    const offsetIndex = dayOfYear % totalEmoticons;
+
+    // 4. Query daily emoticon using offset
+    const dailySql = `
+      SELECT e.emoticonId, e.emoticonName, e.emoticonString, e.emoticonCategory, e.emoticonMood, COUNT(f.emoticonId) AS emoticonFavorites
+      FROM emoticons e
+      LEFT JOIN userFavorites f ON f.emoticonId = e.emoticonId
+      GROUP BY e.emoticonId
+      ORDER BY e.emoticonId ASC
+      LIMIT 1 OFFSET ?
+    `;
+    const [dailyRows] = await pool.query(dailySql, [offsetIndex]);
+
+    // 5. Fetch real-time aggregate database stats
+    const statsSql = `
+      SELECT 
+        COUNT(*) AS totalEmoticons, 
+        COUNT(DISTINCT emoticonCategory) AS totalCategories, 
+        COUNT(DISTINCT emoticonMood) AS totalMoods 
+      FROM emoticons
+    `;
+    const [statsRows] = await pool.query(statsSql);
+
+    // 6. Generate random face and nostalgia score
+    const nostalgiaList = [
+      'd(^_^)b', '(¬_¬)', '(*/ω＼*)', '(┬_┬)', 'c( O.o )b', 
+      '(*^▽^*)', '¯\\_(ツ)_/¯', '(>_<)', '(;¬_¬)', 'o(TヘTo)'
+    ];
+    const randomFace = nostalgiaList[Math.floor(Math.random() * nostalgiaList.length)];
+    const randomLevel = Math.floor(Math.random() * 16) + 85; // Random integer between 85% and 100%
+
+    // 7. Render homepage view
+    res.render('home', {
+      pageTitle: 'Home - EmotiVault',
+      currentPage: 'home',
+      dailyEmoticon: dailyRows[0] || null,
+      stats: statsRows[0] || { totalEmoticons: 0, totalCategories: 6, totalMoods: 12 },
+      nostalgiaFace: randomFace,
+      nostalgiaLevel: randomLevel
+    });
+  } catch (error) {
+    console.error('Home page database error:', error);
+    res.status(500).send('Database connection error.');
+  }
 });
 
 app.get('/login', (req, res) => {
