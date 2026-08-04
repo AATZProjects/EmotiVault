@@ -1,0 +1,158 @@
+<%- include("partials/header", { pageTitle: pageTitle, currentPage: currentPage }) %>
+
+<main class="container ev-main">
+  <!-- Welcome Window -->
+  <div class="ev-window mb-4">
+    <div class="ev-window-titlebar">
+      <span class="ev-window-title">Welcome to EmotiVault</span>
+      <div class="ev-window-controls" aria-hidden="true">
+        <span class="ev-window-control">—</span>
+        <span class="ev-window-control">□</span>
+        <span class="ev-window-control ev-window-control--close">×</span>
+      </div>
+    </div>
+
+    <div class="ev-window-body p-4">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="ev-page-title mb-2">Preserving Nostalgic Emoticons</h1>
+          <p class="fs-6 text-secondary mb-3">
+            Your ultimate vault for retro text emoticons, kaomojis, and classic status messages. Browse, filter, and share your favorite emoticons from the golden era of the internet!
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="/aim-status-generator" class="ev-btn ev-btn-primary">
+              ♫ AIM Status Generator
+            </a>
+            <a href="/login" class="ev-btn ev-btn-outline">
+              Login to Save Favorites
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4 text-center mt-3 mt-md-0">
+          <div class="ev-panel p-3 bg-white">
+            <div class="display-4 ev-font-monospace text-primary mb-2"><%= nostalgiaFace %></div>
+            <span class="ev-muted fw-bold">Nostalgia Level: <%= nostalgiaLevel %>%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 align-items-stretch">
+    <!-- Left Column: Featured Emoticon Card -->
+    <section class="col-lg-7">
+      <div class="ev-panel shadow-sm h-100 d-flex flex-column justify-content-between">
+        <div class="ev-panel-header ev-panel-header--purple d-flex justify-content-between align-items-center">
+          <span>★ Emoticon of the Day</span>
+          <span class="badge bg-light text-dark">Featured</span>
+        </div>
+
+        <div class="ev-panel-body text-center py-3 my-auto">
+          <% if (dailyEmoticon) { %>
+            <div class="p-3 mb-2 rounded border bg-light shadow-sm">
+              <div class="display-4 ev-font-monospace fw-bold text-dark my-1">
+                <%= dailyEmoticon.emoticonString %>
+              </div>
+            </div>
+
+            <h4 class="ev-section-title mb-2"><%= dailyEmoticon.emoticonName %></h4>
+
+            <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+              <span class="badge bg-secondary">Category: <%= dailyEmoticon.emoticonCategory %></span>
+              
+              <% const moodClass = 'ev-mood-' + (dailyEmoticon.emoticonMood ? dailyEmoticon.emoticonMood.toLowerCase() : 'happy'); %>
+              <span class="ev-mood-badge <%= moodClass %>">
+                <%= dailyEmoticon.emoticonMood %>
+              </span>
+            </div>
+
+            <p class="ev-muted mb-0 small">
+              Total Favorites: <strong><%= dailyEmoticon.emoticonFavorites || 0 %></strong>
+            </p>
+          <% } else { %>
+            <p class="ev-muted my-2">No emoticon available for today.</p>
+          <% } %>
+        </div>
+
+        <div class="ev-panel-footer text-center py-2">
+          <button type="button" class="ev-btn ev-btn-secondary ev-btn-sm" data-string="<%= dailyEmoticon ? dailyEmoticon.emoticonString : '' %>" onclick="navigator.clipboard.writeText(this.dataset.string)">
+            Copy String
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Vault Stats & Quick Mood Picker -->
+    <section class="col-lg-5 d-flex flex-column gap-3">
+      <!-- Vault Statistics -->
+      <div class="ev-panel shadow-sm">
+        <div class="ev-panel-header">
+          Vault Statistics
+        </div>
+        <div class="ev-panel-body py-3">
+          <div class="row text-center g-2">
+            <div class="col-4">
+              <div class="p-2 border rounded bg-white shadow-sm">
+                <div class="fs-4 fw-bold text-primary mb-1"><%= stats ? stats.totalEmoticons : 0 %></div>
+                <small class="ev-muted fw-bold">Emoticons</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-2 border rounded bg-white shadow-sm">
+                <div class="fs-4 fw-bold text-primary mb-1"><%= stats ? stats.totalCategories : 0 %></div>
+                <small class="ev-muted fw-bold">Categories</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-2 border rounded bg-white shadow-sm">
+                <div class="fs-4 fw-bold text-primary mb-1"><%= stats ? stats.totalMoods : 0 %></div>
+                <small class="ev-muted fw-bold">Moods</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Mood Emoticon Picker -->
+      <div class="ev-panel shadow-sm flex-grow-1 d-flex flex-column justify-content-between">
+        <div class="ev-panel-header">
+          Quick Mood Picker
+        </div>
+        <div class="ev-panel-body p-3 text-center">
+          <p class="ev-muted small mb-2">Pick a mood:</p>
+          <div class="d-flex flex-wrap justify-content-center gap-1 mb-3">
+            <button class="ev-btn ev-btn-sm btn-outline-secondary" onclick="fetchQuickMood('happy')">Happy</button>
+            <button class="ev-btn ev-btn-sm btn-outline-secondary" onclick="fetchQuickMood('sad')">Sad</button>
+            <button class="ev-btn ev-btn-sm btn-outline-secondary" onclick="fetchQuickMood('cool')">Cool</button>
+            <button class="ev-btn ev-btn-sm btn-outline-secondary" onclick="fetchQuickMood('love')">Love</button>
+          </div>
+
+          <!-- Output area for the generated mood emoticon -->
+          <div id="quick-mood-display" class="p-2 border rounded bg-light ev-font-monospace fs-5 text-dark fw-bold" style="min-height: 48px; display: flex; align-items: center; justify-content: center;">
+            (Click a button above!)
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  async function fetchQuickMood(mood) {
+    const display = document.getElementById('quick-mood-display');
+    display.innerText = 'Loading...';
+    try {
+      const response = await fetch(`/api/emoticons/random?mood=${mood}`);
+      const data = await response.json();
+      if (data.emoticonString) {
+        display.innerText = data.emoticonString;
+      } else {
+        display.innerText = 'None found!';
+      }
+    } catch (err) {
+      display.innerText = 'Error!';
+    }
+  }
+</script>
+
+<%- include("partials/footer") %>
