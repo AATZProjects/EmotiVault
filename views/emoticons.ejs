@@ -60,70 +60,107 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <td class="ev-table-emoticon">:-)</td>
-                    <td>Classic (Latin)</td>
-                    <td>Happy</td>
-                    <td>1,245</td>
-                    <td class="ev-table-actions">
-                    <button class="ev-btn ev-btn-light ev-btn-sm">
-                    Copy
-                    </button>
+                    <% for (let i = 0; i < emoticons.length; i++) { %>
+                            
+                        <tr>
+                        <td class="ev-table-emoticon"><%=emoticons[i].emoticonString%></td>
+                        <td><%=emoticons[i].emoticonCategory%></td>
+                        <td><%=emoticons[i].emoticonMood%></td>
+                        <td><%=emoticons[i].favorites %></td>
+                        <td class="ev-table-actions">
+                        <button class="ev-btn ev-btn-light ev-btn-sm">
+                        Copy
+                        </button>
 
-                    <button
-                        type="button"
-                        class="ev-icon-button"
-                        >
-                        ☆
-                    </button>
-                    </td>
-                    </tr>
-                    <!-- Add additional data between tags here for testing -->
-                    <tr>
-                    <td class="ev-table-emoticon"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="ev-table-actions">
-                    <button class="ev-btn ev-btn-light ev-btn-sm">
-                    Copy
-                    </button>
+                        <button
+                            type="button"
+                            class="ev-icon-button"
+                            >
+                            ☆
+                        </button>
+                        </td>
+                        </tr>
+                        <% } %>
 
-                    <button
-                        type="button"
-                        class="ev-icon-button"
-                        >
-                        ☆
-                    </button>
-                    </td>
-                    </tr>
+                
                 </tbody>
             </table>
     </div>
 
+    <!-- Updates the visibility of the page navigation buttons-->
     <nav class="ev-pagination">
-        <a class="ev-page-link is-disabled" href="#">
-        ‹‹ First
-        </a>
-        
-        <a class="ev-page-link is-disabled" href="#">
-        ‹ Prev
-        </a>
+        <% if (currentPage == 1) {%>
+            <a class="ev-page-link is-disabled" href="/browse?page=1">
+            ‹‹ First
+            </a>
+        <% } else { %>
+            <a class="ev-page-link" href="/browse?page=1">
+            ‹‹ First
+            </a>
+        <% } %>
 
-        <a class="ev-page-link is-active" href="#">
-        1
-        </a>
+        <% if (currentPage > 1) { %>
+            <a class="ev-page-link" href="/browse?page=<%=currentPage - 1%>">
+            ‹ Prev
+            </a>
+        <% } else { %>
+            <a class="ev-page-link is-disabled" href="/browse?page=<%=currentPage - 1 %>">
+            ‹ Prev
+            </a>
+        <% } %>
 
-        <a class="ev-page-link" href="#">2</a>
-        <a class="ev-page-link" href="#">3</a>
-        <a class="ev-page-link" href="#">4</a>
+         <!-- highlights the currenly active page  -->
+        <% if (currentPage == 1) { %>
+            <a class="ev-page-link is-active" href="/browse?page=1">
+            1
+            </a>
+        <% } else { %>
+            <a class="ev-page-link" href="/browse?page=1">
+            1
+            </a>
+        <% } %>
+
+        <% if (currentPage == 2) { %>
+            <a class="ev-page-link is-active" href="/browse?page=2">2</a>
+        <% } else { %>
+            <a class="ev-page-link" href="/browse?page=2">2</a>
+        <% } %>
+
+        <% if (currentPage == 3) { %>
+            <a class="ev-page-link is-active" href="/browse?page=3">3</a>
+        <% } else { %>
+            <a class="ev-page-link" href="/browse?page=3">3</a>
+        <% } %>
+
+        <% if (currentPage == 4) { %>
+            <a class="ev-page-link is-active" href="/browse?page=4">4</a>
+        <% } else { %>
+            <a class="ev-page-link" href="/browse?page=4">4</a>
+        <% } %>
+
         <a class="ev-page-ellipsis">...</a>  
-        <a class="ev-page-link" href="#">23</a>
 
-        <a class="ev-page-link" href="#">Next ›</a>
-        <a class="ev-page-link" href="#">
-        Last ››
-        </a>
+        <% if (currentPage == 24) { %>
+            <a class="ev-page-link is-active" href="/browse?page=24">24</a>
+            <% } else { %>
+            <a class="ev-page-link" href="/browse?page=24">24</a>
+        <% } %>
+
+        <% if (currentPage == 24) { %>
+            <a class="ev-page-link is-disabled" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
+        <% } else { %>
+            <a class="ev-page-link" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
+        <% } %>
+
+        <% if (currentPage == 24) { %>
+            <a class="ev-page-link is-disabled" href="/browse?page=24 %>">
+            Last ››
+            </a>
+        <% } else { %>
+            <a class="ev-page-link" href="/browse?page=<%=currentPage + 1 %>">Last ››</a>
+        <% } %>
+
+
     </nav>
     </div>
     <section>

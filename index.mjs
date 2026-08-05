@@ -118,8 +118,26 @@ app.get('/styleguide', (req, res) => {
   });
 });
 
-app.get('/browse', (req, res) => {
-  res.render('emoticons');
+/*========================================
+  Browse Emoticons
+  ========================================
+*/
+app.get('/browse', async (req, res) => {
+  let page = Number(req.query.page) || 1;
+  let limit = 20;
+  let offset = (page - 1) * limit;
+
+  let sql = `SELECT e.emoticonId, e.emoticonString, e.emoticonCategory, e.emoticonMood, COUNT(f.userId) AS favorites
+             FROM emoticons e
+             LEFT JOIN userFavorites f ON e.emoticonId = f.emoticonId
+             GROUP BY e.emoticonId
+             ORDER BY e.emoticonId
+             LIMIT ? OFFSET ?`;
+          
+  const params = [limit, offset]
+  const [emoticons] = await pool.query(sql, params);
+  res.render('emoticons', {emoticons, 
+                           "currentPage": page});
 });
 
 /*
