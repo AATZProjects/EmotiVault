@@ -1274,3 +1274,69 @@ p {
 code {
   color: var(--ev-purple-dark);
 }
+
+/* =====================================================================================================
+   Browse Page
+   ===================================================================================================== */
+
+/* Browse filters */
+.ev-browse-filters {
+  display: grid;
+  align-items: end;
+  grid-template-columns: 2fr 1fr 1fr 1fr 140px;
+  gap: 0.75rem;
+}
+
+.ev-filter-container {
+  padding: 10px;
+  background: var(--ev-border-light);
+  margin-bottom: 10px;
+}
+
+.ev-browse-filters .ev-btn{
+  width: 100%;
+  min-height: 40px;
+}
+
+.ev-browse-filters .ev-form-group {
+  margin-bottom: 0;
+}
+
+/* Bottom help cards */
+.browse-help-card {
+  display: flex;
+  margin-top: 15px;
+  padding-left: 20px;
+
+}
+
+.browse-help-tips {
+  align-self: center;
+  margin-right: 20px;
+  padding-right: 200px;
+  padding-left: 50px;
+  border-left: 1px solid #8da0b6;
+}
+
+.browse-help-image {
+  width: 70px;
+  height: auto;
+}
+
+.browse-help-content {
+  display: flex;
+  align-items: center;
+  padding-right: 50px;
+  gap: 1rem;
+}
+
+/* Decor pixel art */
+ .decorArt {
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+}
+
+.pixelHeart {
+  padding-left: 250px;
+} 

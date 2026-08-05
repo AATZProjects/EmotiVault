@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/header.ejs')  %>
+<body>
+    <main class="ev-main container-fluid">
+    <h1>Browse Emoticons</h1>
+    <p>Find the perfect emoticon for every mood</p>
+
+    <!-- Filter controls -->
+    <div class="ev-panel ev-filter-container">
+    <form class="ev-form ev-browse-filters">
+        <div class="ev-form-group">
+            <label class="ev-form-label" for="search">Search:</label>
+            <input 
+                class="ev-input"
+                type="search" 
+                name="search" placeholder="Search emoticons...">
+        </div>
+        <div class="ev-form-group">
+            <label class="ev-form-label" for="category">Category:</label>
+            <select
+                class="ev-select"
+                name="category">
+                <option>All Categories</option>
+        </select>
+        </div>
+        <div class="ev-form-group">
+            <label class="ev-form-label" for="mood">Mood:</label>
+            <select 
+                class="ev-select"
+                name="mood" >
+                <option>All Moods</option>
+            </select>
+        </div>
+        <div class="ev-form-group">
+        <label class="ev-form-label" for="mood">Sort by:</label>
+            <select 
+                class="ev-select"
+                name="sort" >
+                <option>Most Popular</option>
+            </select>
+        </div>
+        <button
+            class="ev-btn ev-btn-primary"
+            type="submit">Search</button>
+    </form>
+</div>
+
+    <!-- Table -->
+    <div class="ev-table-container">
+        <div class="ev-table-scroll">
+            <table class="ev-table">
+                <thead>
+                    <tr>
+                    <th>Emoticon</th>
+                    <th>Category</th>
+                    <th>Mood</th>
+                    <th>Favorites</th>
+                    <th class="ev-table-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td class="ev-table-emoticon">:-)</td>
+                    <td>Classic (Latin)</td>
+                    <td>Happy</td>
+                    <td>1,245</td>
+                    <td class="ev-table-actions">
+                    <button class="ev-btn ev-btn-light ev-btn-sm">
+                    Copy
+                    </button>
+
+                    <button
+                        type="button"
+                        class="ev-icon-button"
+                        >
+                        ☆
+                    </button>
+                    </td>
+                    </tr>
+                    <!-- Add additional data between tags here for testing -->
+                    <tr>
+                    <td class="ev-table-emoticon"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="ev-table-actions">
+                    <button class="ev-btn ev-btn-light ev-btn-sm">
+                    Copy
+                    </button>
+
+                    <button
+                        type="button"
+                        class="ev-icon-button"
+                        >
+                        ☆
+                    </button>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+
+    <nav class="ev-pagination">
+        <a class="ev-page-link is-disabled" href="#">
+        ‹‹ First
+        </a>
+        
+        <a class="ev-page-link is-disabled" href="#">
+        ‹ Prev
+        </a>
+
+        <a class="ev-page-link is-active" href="#">
+        1
+        </a>
+
+        <a class="ev-page-link" href="#">2</a>
+        <a class="ev-page-link" href="#">3</a>
+        <a class="ev-page-link" href="#">4</a>
+        <a class="ev-page-ellipsis">...</a>  
+        <a class="ev-page-link" href="#">23</a>
+
+        <a class="ev-page-link" href="#">Next ›</a>
+        <a class="ev-page-link" href="#">
+        Last ››
+        </a>
+    </nav>
+    </div>
+    <section>
+        <div class="ev-panel browse-help-card">
+            <div class="ev-panel-body">
+                <div class="browse-help-content">
+                    <img src="imgs/emotivault_aim_buddy.svg" alt="emoticon icon" class="browse-help-image">
+                    <div>
+                        <h3>Make it Uniquely you!</h3>  
+                        <p>Explore thousands of classic emoticons <br>
+                            and find the ones that speak to you.</p>
+                        <img src="imgs/emotivault_heart" alt="heart decor" class="pixelHeart">
+                    </div>
+                </div>
+            </div>
+            <div class="browse-help-tips">
+                <h3>Tips:</h3>
+                <ul>
+                    <li>Filter by category or mood to find what you need</li>
+                    <li>Add favorites to quick access your top picks</li>
+                </ul>
+            </div>
+
+            <div class="decorArt">
+                <img src="imgs/emotivault_computer" alt="computer decor" class="pixelComputer">
+                <img src="imgs/emotivault_rainbow" alt="rainbow decor" class="pixelRainbow">
+            </div>
+        </div>
+    </section>
+    </main>
+    <%- include('partials/footer')  %>
+</body>
+</html>
