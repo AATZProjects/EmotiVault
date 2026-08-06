@@ -3,10 +3,24 @@ import 'dotenv/config'; // Load environment variables first
 import express from 'express';
 import mysql from 'mysql2/promise';
 
+import session from 'express-session';    // Saving user sessions
+
 const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+
+// For Saving User Sessions
+app.set('trust proxy', 1);
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 14 * 24 * 60 * 60 * 1000,   // 14 days (total maxAge is measured in milliseconds)
+    secure: process.env.NODE_ENV === 'production',    // false on localhost, true on production - will require HTTPS when the webpage is published
+  }
+}));
 
 //for Express to get values using POST method
 app.use(express.urlencoded({ extended: true }));
@@ -32,6 +46,13 @@ const mockUsers = [{ username: 'admin', password: 'password123' }];
 */
 // Home page
 app.get(['/', '/home'], async (req, res) => {
+  // DEBUG: Check if user is logged in
+  if (req.session.authenticated) {
+    console.log("SESSION AUTHENTICATED AS USER: " + req.session.name + " | ID: " + req.sessionID);
+  } else {
+    console.log("No user session saved");
+  }
+  
   try {
     // 1. Calculate the current day of the year (1 - 366) for daily rotation
     const now = new Date();
@@ -153,6 +174,11 @@ app.post('/login', (req, res) => {
   );
 
   if (user) {
+    // Save the user session
+    req.session.authenticated = true;
+    req.session.name = username;
+    console.log("SESSION SAVED AS USER: " + req.session.name + " | ID: " + req.sessionID);
+
     res.send(
       '<h1>Login Successful!</h1><p>Welcome back!</p><a href="/login">Back</a>',
     );
@@ -191,6 +217,16 @@ app.post('/signup', (req, res) => {
     `<h1>Account Created!</h1><p>User <strong>${username}</strong> registered successfully.</p><a href="/login">Go to Login</a>`,
   );
 });
+
+// Middleware verification function in case user isn't logged in
+function isAuthenticated(req, res, next) {
+  // If the user is not yet authenticated (logged in), redirect them to the login page
+  if (!req.session.authenticated) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+}
 
 /*
 =============================================
