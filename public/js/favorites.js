@@ -1,47 +1,37 @@
-// TODO - Get the user ID from local storage
-let userID = 2;
-
 // When the page loads, request the favorites information using the User ID
 document.addEventListener("DOMContentLoaded", initPage);
 
 async function initPage() {
-    // TODO, if the user ID isn't valid redirect us to the login page
-    let response = await fetch(`/api/userFavorites/${userID}`);
+    let response = await fetch(`/api/userFavorites?page=1&limit=2`);            // TODO: REMOVE THE LIMIT LINE WHEN DONE WITH DEBUGGING
     let data = await response.json();
-
-    // Update the Favorites Count
-    let likeCountText = document.querySelector("#total-favorites-value");
-    likeCountText.innerHTML = data.likeCount;
+    console.log(data);
 
     // Procedurally Generate the Rows
     let tableBody = document.querySelector(".favorites-table-body");
 
-    for (let emoticon of data.emoticons) {
-        // Use the Emoticons API to get the corresponding emoticon information
-        let response = await fetch(`/api/emoticon/${emoticon.emoticonId}`);
-        let emoticonObject = await response.json();
-
+    
+    for (let emoticonRow of data.emoticons) {
         let tableRow = document.createElement("tr");
 
         // Emoticon String
         let emoticonString = document.createElement("td");
         emoticonString.className = "ev-table-emoticon";
-        emoticonString.innerHTML = emoticonObject.emoticonString;
+        emoticonString.innerHTML = emoticonRow.emoticonString;
         tableRow.appendChild(emoticonString);
 
         // Emoticon Category
         let emoticonCategory = document.createElement("td");
-        emoticonCategory.innerHTML = emoticonObject.emoticonCategory;
+        emoticonCategory.innerHTML = emoticonRow.emoticonCategory;
         tableRow.appendChild(emoticonCategory);
 
         // Emoticon Mood
         let emoticonMood = document.createElement("td");
-        emoticonMood.innerHTML = emoticonObject.emoticonMood;
+        emoticonMood.innerHTML = emoticonRow.emoticonMood;
         tableRow.appendChild(emoticonMood);
 
         // Date Added
         let dateAdded = document.createElement("td");
-        dateAdded.innerHTML = emoticon.likedDate;
+        dateAdded.innerHTML = emoticonRow.likedDate;
         tableRow.appendChild(dateAdded);
 
         // Remove Button
@@ -52,11 +42,12 @@ async function initPage() {
         removeButton.innerHTML = "Remove";
         removeButtonData.appendChild(removeButton);
 
-        removeButton.addEventListener("click", () => {removeLike(emoticon.emoticonId)});
+        removeButton.addEventListener("click", () => {removeLike(emoticonRow.emoticonId)});
         tableRow.appendChild(removeButtonData);
 
         tableBody.appendChild(tableRow);
     }
+        
 }
 
 // TODO: REMOVE EMOTICON FROM LIKE TABLE

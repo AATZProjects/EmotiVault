@@ -197,12 +197,15 @@ app.get('/aim-status-generator', (req, res) => {
   });
 });
 
-app.get('/favorites', isAuthenticated, (req, res) => {
-  // If the user is not signed in, redirect to login
+app.get('/favorites', isAuthenticated, async (req, res) => {
+  // Get the number of liked emoticons
+  let sql = `SELECT COUNT(userId) AS likes FROM userFavorites WHERE userId = ?`;
+  let [rows] = await pool.query(sql, req.session.userId);
   
   res.render('favorites', {
     pageTitle: 'Favorites',
     currentPage: 'favorites',
+    likes: rows[0].likes,
   });
 });
 
@@ -491,16 +494,16 @@ app.get('/dbTest', async (req, res) => {
 =============================================
 */
 
-app.get('/api/userFavorites/:userId', async (req, res) => {
+app.get('/api/userFavorites', async (req, res) => {
   try {
     let [rows] = await pool.query(`
     SELECT e.emoticonId, e.emoticonName, e.emoticonString, e.emoticonCategory, e.emoticonMood, DATE_FORMAT(f.likedDate, '%m/%d/%Y') AS likedDate
     FROM emoticons e
     INNER JOIN userFavorites f ON f.emoticonId = e.emoticonId
-    WHERE f.userId = 2
+    WHERE f.userId = ?
     GROUP BY emoticonId
     ORDER BY emoticonId ASC;
-    `, [req.params.userId]);
+    `, [req.session.userId]);
 
     apiPaginate(rows, req, res);
   } catch (error) {
@@ -814,6 +817,7 @@ function apiPaginate(rows, req, res) {
       emoticonCategory: emoticon.emoticonCategory,
       emoticonMood: emoticon.emoticonMood,
       emoticonFavorites: emoticon.emoticonFavorites,
+      likedDate: emoticon.likedDate ?? 'N/A',
     };
 
     emoticons.push(emoticonObject);
