@@ -133,10 +133,23 @@ app.get('/browse', async (req, res) => {
              GROUP BY e.emoticonId
              ORDER BY e.emoticonId
              LIMIT ? OFFSET ?`;
+
+  let sqlCategory = `SELECT DISTINCT emoticonCategory
+                     FROM emoticons
+                     ORDER BY emoticonId`;
+
+  let sqlMood = `SELECT DISTINCT emoticonMood
+                     FROM emoticons
+                     ORDER BY emoticonId`;                     
           
   const params = [limit, offset]
   const [emoticons] = await pool.query(sql, params);
+  const [categories] = await pool.query(sqlCategory);
+  const [moods] = await pool.query(sqlMood);
+
   res.render('emoticons', {emoticons, 
+                           categories,
+                           moods,
                            "currentPage": page});
 });
 
