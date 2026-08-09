@@ -3,14 +3,41 @@ import 'dotenv/config'; // Load environment variables first
 import express from 'express';
 import mysql from 'mysql2/promise';
 
+import session from 'express-session';    // Saving user sessions
+
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+
 const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
+// For Saving User Sessions
+app.set('trust proxy', 1);
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 14 * 24 * 60 * 60 * 1000,   // 14 days (total maxAge is measured in milliseconds)
+    secure: process.env.NODE_ENV === 'production',    // false on localhost, true on production - will require HTTPS when the webpage is published
+  }
+}));
+
 //for Express to get values using POST method
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Initialize Passport and session authentication
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Make session variables accessible in all EJS view templates
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
 
 //setting up database connection pool
 const pool = mysql.createPool({
@@ -27,11 +54,70 @@ const mockUsers = [{ username: 'admin', password: 'password123' }];
 
 /*
 =============================================
+  Passport & Google OAuth Configuration
+=============================================
+*/
+// Serialize user object into session ID
+passport.serializeUser((user, done) => {
+  done(null, user.userId);
+});
+
+// Deserialize user object from session ID
+passport.deserializeUser(async (id, done) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM users WHERE userId = ?', [id]);
+    done(null, rows[0]);
+  } catch (err) {
+    done(err, null);
+  }
+});
+
+// Configure Google OAuth Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      const googleId = profile.id;
+      const username = profile.displayName;
+      const email = profile.emails && profile.emails[0] ? profile.emails[0].value : '';
+      const avatarUrl = profile.photos && profile.photos[0] ? profile.photos[0].value : '';
+
+      // Insert or update user credentials in MySQL database
+      const sql = `
+        INSERT INTO users (googleId, username, email, avatarUrl)
+        VALUES (?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE username = VALUES(username), avatarUrl = VALUES(avatarUrl)
+      `;
+      await pool.query(sql, [googleId, username, email, avatarUrl]);
+
+      // Fetch newly inserted/updated user record
+      const [rows] = await pool.query('SELECT * FROM users WHERE googleId = ?', [googleId]);
+      return done(null, rows[0]);
+    } catch (error) {
+      console.error('Google OAuth DB Error:', error);
+      return done(error, null);
+    }
+  }
+));
+
+
+/*
+=============================================
   Routes
 =============================================
 */
 // Home page
 app.get(['/', '/home'], async (req, res) => {
+  // DEBUG: Check if user is logged in
+  if (req.session.authenticated) {
+    console.log("SESSION AUTHENTICATED AS USER: " + req.session.name + " | ID: " + req.sessionID);
+  } else {
+    console.log("No user session saved");
+  }
+  
   try {
     // 1. Calculate the current day of the year (1 - 366) for daily rotation
     const now = new Date();
@@ -119,6 +205,37 @@ app.get('/styleguide', (req, res) => {
 });
 
 /*========================================
+  OAuth & Authentication Routes
+  ========================================
+*/
+// Initiate Google OAuth login
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+// Google OAuth callback endpoint
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Sync session variables for backward compatibility
+    req.session.authenticated = true;
+    req.session.name = req.user.username;
+    
+    res.redirect('/');
+  }
+);
+
+// User logout endpoint
+app.get('/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) { return next(err); }
+    req.session.destroy(() => {
+      res.redirect('/login');
+    });
+  });
+});
+
+/*========================================
   Browse Emoticons
   ========================================
 */
@@ -152,52 +269,63 @@ app.get('/favorites', (req, res) => {
   Login/Signup
 =============================================
 */
-app.post('/login', (req, res) => {
+// Handle login submission using MySQL
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  const user = mockUsers.find(
-    (u) => u.username === username && u.password === password,
-  );
-
-  if (user) {
-    res.send(
-      '<h1>Login Successful!</h1><p>Welcome back!</p><a href="/login">Back</a>',
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM users WHERE username = ? AND password = ?',
+      [username, password]
     );
-  } else {
-    res
-      .status(401)
-      .send(
-        '<h1>Login Failed!</h1><p>Invalid username or password.</p><a href="/login">Try again</a>',
-      );
+
+    if (rows.length > 0) {
+      const user = rows[0];
+      req.session.authenticated = true;
+      req.session.name = user.username;
+      req.session.userId = user.userId;
+
+      return res.json({ success: true, redirectUrl: '/' });
+    } else {
+      return res.status(401).json({ success: false, message: 'Invalid username or password.' });
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    return res.status(500).json({ success: false, message: 'Database error during login.' });
   }
 });
 
-// Handle signup submission
-app.post('/signup', (req, res) => {
+// Handle signup submission using MySQL
+app.post('/signup', async (req, res) => {
   const { username, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
-    return res
-      .status(400)
-      .send(
-        '<h1>Signup Failed!</h1><p>Passwords do not match.</p><a href="/signup">Try again</a>',
-      );
+    return res.status(400).json({ success: false, message: 'Passwords do not match.' });
   }
 
-  const existingUser = mockUsers.find((u) => u.username === username);
-  if (existingUser) {
-    return res
-      .status(400)
-      .send(
-        '<h1>Signup Failed!</h1><p>Username already taken.</p><a href="/signup">Try again</a>',
-      );
-  }
+  try {
+    const [existing] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    if (existing.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username is already taken.' });
+    }
 
-  mockUsers.push({ username, password });
-  res.send(
-    `<h1>Account Created!</h1><p>User <strong>${username}</strong> registered successfully.</p><a href="/login">Go to Login</a>`,
-  );
+    await pool.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password]);
+    return res.json({ success: true, message: 'Account created successfully! You can now log in.' });
+  } catch (error) {
+    console.error('Signup error:', error);
+    return res.status(500).json({ success: false, message: 'Database error during signup.' });
+  }
 });
+
+// Middleware verification function in case user isn't logged in
+function isAuthenticated(req, res, next) {
+  // If the user is not yet authenticated (logged in), redirect them to the login page
+  if (!req.session.authenticated) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+}
 
 /*
 =============================================
