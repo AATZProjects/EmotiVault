@@ -113,7 +113,7 @@ passport.use(new GoogleStrategy({
 app.get(['/', '/home'], async (req, res) => {
   // DEBUG: Check if user is logged in
   if (req.session.authenticated) {
-    console.log("SESSION AUTHENTICATED AS USER: " + req.session.name + " | ID: " + req.sessionID);
+    console.log("SESSION AUTHENTICATED AS USER: " + req.session.name + " | ID: " + req.session.userId);
   } else {
     console.log("No user session saved");
   }
@@ -220,6 +220,7 @@ app.get('/auth/google/callback',
     // Sync session variables for backward compatibility
     req.session.authenticated = true;
     req.session.name = req.user.username;
+    req.session.userId = req.user.userId;
     
     res.redirect('/');
   }
