@@ -197,6 +197,15 @@ app.get('/aim-status-generator', (req, res) => {
   });
 });
 
+app.get('/favorites', isAuthenticated, (req, res) => {
+  // If the user is not signed in, redirect to login
+  
+  res.render('favorites', {
+    pageTitle: 'Favorites',
+    currentPage: 'favorites',
+  });
+});
+
 app.get('/styleguide', (req, res) => {
   res.render('styleguide', {
     pageTitle: 'Style Guide',
@@ -256,13 +265,6 @@ app.get('/browse', async (req, res) => {
   const [emoticons] = await pool.query(sql, params);
   res.render('emoticons', {emoticons, 
                            "currentPage": page});
-});
-
-app.get('/favorites', (req, res) => {
-  res.render('favorites', {
-    pageTitle: 'Favorites',
-    currentPage: 'favorites',
-  });
 });
 
 /*
@@ -491,20 +493,19 @@ app.get('/dbTest', async (req, res) => {
 
 app.get('/api/userFavorites/:userId', async (req, res) => {
   try {
-    let sql = `SELECT emoticonId, DATE_FORMAT(likedDate, "%m/%d/%Y") AS likedDate FROM userFavorites WHERE userId = ?`;
-    let userId = req.params.userId;
-    let params = [userId];
+    let [rows] = await pool.query(`
+    SELECT e.emoticonId, e.emoticonName, e.emoticonString, e.emoticonCategory, e.emoticonMood, DATE_FORMAT(f.likedDate, '%m/%d/%Y') AS likedDate
+    FROM emoticons e
+    INNER JOIN userFavorites f ON f.emoticonId = e.emoticonId
+    WHERE f.userId = 2
+    GROUP BY emoticonId
+    ORDER BY emoticonId ASC;
+    `, [req.params.userId]);
 
-    let [emoticons] = await pool.query(sql, params);
-
-    sql = `SELECT COUNT(userId) AS count FROM userFavorites WHERE userId = ?`;
-    let [countRow] = await pool.query(sql, params);
-
-    res.json({"emoticons": emoticons, "likeCount": countRow[0].count});
-
+    apiPaginate(rows, req, res);
   } catch (error) {
-    console.log(error);
-    res.json({"error": error});
+    console.error(error);
+    generateError(res, 'Undefined Error.');
   }
 });
 
