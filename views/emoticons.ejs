@@ -22,6 +22,11 @@
                 class="ev-select"
                 name="category">
                 <option>All Categories</option>
+                <% for (let i = 0; i < categories.length; i++ ) { %>
+                    <option value="<%= categories[i].emoticonCategory.toLowerCase() %>">
+                        <%= categories[i].emoticonCategory %>
+                    </option>
+                <% } %>
         </select>
         </div>
         <div class="ev-form-group">
@@ -30,6 +35,11 @@
                 class="ev-select"
                 name="mood" >
                 <option>All Moods</option>
+                <% for (let i = 0; i < moods.length; i++ ) { %>
+                    <option value="<%= moods[i].emoticonMood.toLowerCase() %>">
+                        <%= moods[i].emoticonMood %>
+                    </option>
+                <% } %>
             </select>
         </div>
         <div class="ev-form-group">
