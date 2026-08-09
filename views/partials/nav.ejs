@@ -35,5 +35,22 @@
       <img src="/imgs/emotivault_icon_favorites.svg" alt="" class="nav-icon" />
       <span>Favorites</span>
     </a>
+
+    <!-- Auth State: Login / Logout -->
+    <% if (locals.session && locals.session.authenticated) { %>
+      <span class="nav-item text-success fw-bold">
+        <span><%= session.name %></span>
+      </span>
+      <a class="nav-item text-danger" href="/logout">
+        <span>Logout</span>
+      </a>
+    <% } else { %>
+      <a
+        class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'login' ? 'active' : '' %>"
+        href="/login"
+      >
+        <span>Login</span>
+      </a>
+    <% } %>
   </div>
 </nav>

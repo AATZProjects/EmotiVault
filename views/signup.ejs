@@ -7,7 +7,7 @@
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
       <div class="ev-window">
-        <div class="ev-window-titlebar ev-window-titlebar--purple">
+        <div class="ev-window-titlebar">
           <span class="ev-window-title">Sign Up</span>
           <div class="ev-window-controls" aria-hidden="true">
             <span class="ev-window-control">—</span>
@@ -17,7 +17,7 @@
         </div>
 
         <div class="ev-window-body">
-          <form action="/signup" method="POST">
+          <form id="signupForm">
             <div class="mb-3">
               <label for="username" class="form-label fw-bold">Username</label>
               <input type="text" class="form-control" id="username" name="username" required />
@@ -34,19 +34,47 @@
             </div>
 
             <div class="d-grid gap-2 mt-4">
-              <button type="submit" class="ev-btn ev-btn-secondary">Create Account</button>
+              <button type="submit" class="ev-btn ev-btn-primary">Sign Up</button>
             </div>
           </form>
 
           <hr class="my-4" />
 
           <p class="text-center mb-0 ev-muted">
-            Already have an account? <a href="/login">Login here</a>
+            Already have an account? <a href="/login">Log in here</a>
           </p>
         </div>
       </div>
     </div>
   </div>
 </main>
+<script>
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        alert('🎉 ' + result.message);
+        window.location.href = '/login';
+      } else {
+        alert('❌ Signup Failed: ' + (result.message || 'Registration failed.'));
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
+      alert('An unexpected error occurred. Please try again.');
+    }
+  });
+</script>
 
 <%- include("partials/footer") %>
