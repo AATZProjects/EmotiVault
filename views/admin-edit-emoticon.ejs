@@ -1,0 +1,125 @@
+<%- include("partials/header", { pageTitle: pageTitle, currentPage: currentPage }) %>
+
+  <main class="container ev-main">
+
+    <div class="ev-window">
+      <div class="ev-window-titlebar">
+        <span class="ev-window-title">
+          Site Administrator - Edit Emoticon
+        </span>
+
+        <div class="ev-window-controls">
+          <span class="ev-window-control">—</span>
+          <span class="ev-window-control">□</span>
+          <span class="ev-window-control ev-window-control--close">×</span>
+        </div>
+      </div>
+
+      <div class="ev-window-body">
+
+        <div class="mb-4">
+          <h1 class="ev-section-title mb-2">
+            Edit Emoticon
+          </h1>
+
+          <p class="ev-muted mb-0">
+            Update the emoticon string, category, or mood.
+          </p>
+        </div>
+
+        <div class="ev-panel">
+          <div class="ev-panel-header">
+            Emoticon #<%= emoticon.emoticonId %>
+          </div>
+
+          <div class="ev-panel-body">
+
+            <form class="ev-form" action="/admin/emoticons/<%= emoticon.emoticonId %>/edit" method="post">
+
+              <!-- ID -->
+              <div class="ev-form-group">
+                <label class="ev-form-label">
+                  Emoticon ID
+                </label>
+
+                <input class="ev-input" type="text" value="<%= emoticon.emoticonId %>" disabled />
+              </div>
+
+              <!-- Emoticon Name -->
+              <div class="ev-form-group">
+                <label class="ev-form-label" for="emoticonName">
+                  Name
+                </label>
+
+                <input id="emoticonName" class="ev-input" type="text" name="emoticonName"
+                  value="<%= emoticon.emoticonName %>" required />
+              </div>
+
+              <!-- Emoticon String -->
+              <div class="ev-form-group">
+                <label class="ev-form-label" for="emoticonString">
+                  Emoticon
+                </label>
+
+                <input id="emoticonString" class="ev-input ev-font-monospace" type="text" name="emoticonString"
+                  value="<%= emoticon.emoticonString %>" required />
+              </div>
+
+              <!-- Category -->
+              <div class="ev-form-group">
+                <label class="ev-form-label" for="emoticonCategory">
+                  Category
+                </label>
+
+                <select id="emoticonCategory" class="ev-select" name="emoticonCategory" required>
+                  <% const categories=[ 'Classic' , 'Upright' , 'Unicode' , 'Kaomoji' , 'Misc' , '2Channel' ]; %>
+
+                    <% categories.forEach((category)=> { %>
+                      <option value="<%= category %>" <%=emoticon.emoticonCategory===category ? 'selected' : '' %>
+                        >
+                        <%= category %>
+                      </option>
+                      <% }) %>
+                </select>
+              </div>
+
+              <!-- Mood -->
+              <div class="ev-form-group">
+                <label class="ev-form-label" for="emoticonMood">
+                  Mood
+                </label>
+
+                <select id="emoticonMood" class="ev-select" name="emoticonMood" required>
+                  <% const moods=[ 'Happy' , 'Sad' , 'Angry' , 'Love' , 'Surprised' , 'Confused' , 'Embarrassed'
+                    , 'Playful' , 'Neutral' , 'Sleepy' , 'Cool' , 'Respect' ]; %>
+
+                    <% moods.forEach((mood)=> { %>
+                      <option value="<%= mood %>" <%=emoticon.emoticonMood===mood ? 'selected' : '' %>
+                        >
+                        <%= mood %>
+                      </option>
+                      <% }) %>
+                </select>
+              </div>
+
+              <div class="ev-form-actions">
+                <button type="submit" class="ev-btn ev-btn-primary">
+                  Save Changes
+                </button>
+
+                <a href="/admin/emoticons" class="ev-btn ev-btn-light">
+                  Cancel
+                </a>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <%- include("partials/footer") %>
