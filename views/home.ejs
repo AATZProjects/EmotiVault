@@ -1,42 +1,50 @@
 <%- include("partials/header", { pageTitle: pageTitle, currentPage: currentPage }) %>
 
 <main class="container ev-main">
-  <!-- Welcome Window -->
-  <div class="ev-window mb-4">
-    <div class="ev-window-titlebar">
-      <span class="ev-window-title">Welcome to EmotiVault</span>
-      <div class="ev-window-controls" aria-hidden="true">
-        <span class="ev-window-control">—</span>
-        <span class="ev-window-control">□</span>
-        <span class="ev-window-control ev-window-control--close">×</span>
-      </div>
+<!-- Welcome Window -->
+<div class="ev-window mb-4">
+  <div class="ev-window-titlebar">
+    <span class="ev-window-title">Welcome to EmotiVault</span>
+    <div class="ev-window-controls" aria-hidden="true">
+      <span class="ev-window-control">—</span>
+      <span class="ev-window-control">□</span>
+      <span class="ev-window-control ev-window-control--close">×</span>
     </div>
+  </div>
 
-    <div class="ev-window-body p-4">
-      <div class="row align-items-center">
-        <div class="col-md-8">
-          <h1 class="ev-page-title mb-2">Preserving Nostalgic Emoticons</h1>
-          <p class="fs-6 text-secondary mb-3">
-            Your ultimate vault for retro text emoticons, kaomojis, and classic status messages. Browse, filter, and share your favorite emoticons from the golden era of the internet!
-          </p>
-          <div class="d-flex flex-wrap gap-2">
-            <a href="/aim-status-generator" class="ev-btn ev-btn-primary">
-              ♫ AIM Status Generator
+  <div class="ev-window-body p-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="ev-page-title mb-2">Preserving Nostalgic Emoticons</h1>
+        <p class="fs-6 text-secondary mb-3">
+          Your ultimate vault for retro text emoticons, kaomojis, and classic status messages. Browse, filter, and share your favorite emoticons from the golden era of the internet!
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="/aim-status-generator" class="ev-btn ev-btn-primary">
+            ♫ AIM Status Generator
+          </a>
+
+          <!-- Toggle button based on user session -->
+          <% if (locals.session && locals.session.authenticated) { %>
+            <a href="/favorites" class="ev-btn ev-btn-outline">
+              ★ View Favorites
             </a>
+          <% } else { %>
             <a href="/login" class="ev-btn ev-btn-outline">
               Login to Save Favorites
             </a>
-          </div>
+          <% } %>
         </div>
-        <div class="col-md-4 text-center mt-3 mt-md-0">
-          <div class="ev-panel p-3 bg-white">
-            <div class="display-4 ev-font-monospace text-primary mb-2"><%= nostalgiaFace %></div>
-            <span class="ev-muted fw-bold">Nostalgia Level: <%= nostalgiaLevel %>%</span>
-          </div>
+      </div>
+      <div class="col-md-4 text-center mt-3 mt-md-0">
+        <div class="ev-panel p-3 bg-white">
+          <div class="display-4 ev-font-monospace text-primary mb-2"><%= nostalgiaFace %></div>
+          <span class="ev-muted fw-bold">Nostalgia Level: <%= nostalgiaLevel %>%</span>
         </div>
       </div>
     </div>
   </div>
+</div>
 
   <div class="row g-4 align-items-stretch">
     <!-- Left Column: Featured Emoticon Card -->
