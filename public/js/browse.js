@@ -18,7 +18,7 @@ async function filterEmoticons(event) {
     
     const data = await response.json();
     
-    console.log(data);
+    updateEmoticons(data.emoticons);
 } 
 
 function updateEmoticons(emoticons) {
@@ -27,12 +27,37 @@ function updateEmoticons(emoticons) {
     tbody.replaceChildren();
 
     for (let i = 0; i < emoticons.length; i++) {
-        const row = document.createElement("tr"); 
-        const cell = document.createElement("td");
+        const tr = document.createElement("tr"); 
+        const emoticonString = document.createElement("td");
+        const category = document.createElement("td");
+        const mood = document.createElement("td");
+        const favorites = document.createElement("td");
+        const actions = document.createElement("td");
 
-        emoticons.textContent = emoticons[i].emoticonString;
-        row.appendChild(cell);
+        const copyBtn = document.createElement("button");
+        const starBtn = document.createElement("button");
+    
 
-        tbody.appendChild(row);
+        emoticonString.textContent = emoticons[i].emoticonString;
+        category.textContent = emoticons[i].emoticonCategory;
+        mood.textContent = emoticons[i].emoticonMood;
+        favorites.textContent = emoticons[i].emoticonFavorites;
+
+        copyBtn.className = "ev-btn ev-btn-light ev-btn-sm";
+        copyBtn.textContent = "Copy";
+        starBtn.className = "ev-icon-button";
+        starBtn.type = "button"
+        starBtn.textContent = "☆";
+
+        actions.appendChild(copyBtn);
+        actions.appendChild(starBtn);
+
+        tr.appendChild(emoticonString);
+        tr.appendChild(category);
+        tr.appendChild(mood);
+        tr.appendChild(favorites);
+        tr.appendChild(actions);
+
+        tbody.appendChild(tr);
     }
 }
