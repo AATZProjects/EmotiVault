@@ -1,62 +1,15 @@
 let numPages = 0;
 let currentPage = 1;
-let pageSize = 2;
+let pageSize = 2;                   // TODO: REMOVE THE LIMIT LINE WHEN DONE WITH DEBUGGING
 
 // When the page loads, request the favorites information using the User ID
 document.addEventListener("DOMContentLoaded", initPage);
-document.querySelector("#first-btn").addEventListener("click", () => {changePage(1)});
-document.querySelector("#prev-btn").addEventListener("click", () => {changePage(currentPage - 1)});
+document.querySelector("#first-btn").addEventListener("click", () => { changePage(1) });
+document.querySelector("#prev-btn").addEventListener("click", () => { changePage(currentPage - 1) });
 
 async function initPage() {
-    let response = await fetch(`/api/userFavorites?page=1&limit=${pageSize}`);            // TODO: REMOVE THE LIMIT LINE WHEN DONE WITH DEBUGGING
-    let data = await response.json();
-    console.log(data);
+    await renderEmoticons();
 
-    // Procedurally Generate the Rows
-    let tableBody = document.querySelector(".favorites-table-body");
-
-    
-    for (let emoticonRow of data.emoticons) {
-        let tableRow = document.createElement("tr");
-
-        // Emoticon String
-        let emoticonString = document.createElement("td");
-        emoticonString.className = "ev-table-emoticon";
-        emoticonString.innerHTML = emoticonRow.emoticonString;
-        tableRow.appendChild(emoticonString);
-
-        // Emoticon Category
-        let emoticonCategory = document.createElement("td");
-        emoticonCategory.innerHTML = emoticonRow.emoticonCategory;
-        tableRow.appendChild(emoticonCategory);
-
-        // Emoticon Mood
-        let emoticonMood = document.createElement("td");
-        emoticonMood.innerHTML = emoticonRow.emoticonMood;
-        tableRow.appendChild(emoticonMood);
-
-        // Date Added
-        let dateAdded = document.createElement("td");
-        dateAdded.innerHTML = emoticonRow.likedDate;
-        tableRow.appendChild(dateAdded);
-
-        // Remove Button
-        let removeButtonData = document.createElement("td");
-        removeButtonData.className = "ev-table-actions";
-        let removeButton = document.createElement("button");
-        removeButton.className = "ev-btn ev-btn-danger";
-        removeButton.innerHTML = "Remove";
-        removeButtonData.appendChild(removeButton);
-
-        removeButton.addEventListener("click", () => {removeLike(emoticonRow.emoticonId)});
-        tableRow.appendChild(removeButtonData);
-
-        tableBody.appendChild(tableRow);
-    }
-
-
-    // Procedurally Generate Pages
-    numPages = data.num_pages;
     await renderPageButtons();
 }
 
@@ -76,7 +29,7 @@ function renderPageButtons() {
         pageButton.innerHTML = page;
         pageButton.id = `page-button-${page}`;
 
-        pageButton.addEventListener("click", () => {changePage(page)});
+        pageButton.addEventListener("click", () => { changePage(page) });
 
         paginationBar.appendChild(pageButton);
     }
@@ -96,13 +49,13 @@ function renderPageButtons() {
     nextButton.id = "next-btn";
     lastButton.id = "last-btn";
 
-    nextButton.addEventListener("click", () => {changePage(currentPage + 1)});
-    lastButton.addEventListener("click", () => {changePage(numPages)});
-    
+    nextButton.addEventListener("click", () => { changePage(currentPage + 1) });
+    lastButton.addEventListener("click", () => { changePage(numPages) });
+
     paginationBar.appendChild(nextButton);
     paginationBar.appendChild(lastButton);
 }
-function changePage(newPage) {
+async function changePage(newPage) {
     // If the new page is already the current page, do nothing
     if (newPage === currentPage) {
         return;
@@ -141,10 +94,91 @@ function changePage(newPage) {
         document.querySelector("#next-btn").className = "ev-page-link";
         document.querySelector("#last-btn").className = "ev-page-link";
     }
+
+    /// Update the actual table elements
+    await renderEmoticons();
+}
+
+async function renderEmoticons() {
+    let response = await fetch(`/api/userFavorites?page=${currentPage}&limit=${pageSize}`);
+    let data = await response.json();
+
+    // Remove all of the rows currently being rendered
+    document.querySelectorAll(".emoticon-table-row").forEach(row => row.remove());
+
+    // Procedurally Generate the Rows
+    let tableBody = document.querySelector(".favorites-table-body");
+
+
+    for (let emoticonRow of data.emoticons) {
+        let tableRow = document.createElement("tr");
+        tableRow.className = "emoticon-table-row";
+
+        // Emoticon String
+        let emoticonString = document.createElement("td");
+        emoticonString.className = "ev-table-emoticon";
+        emoticonString.innerHTML = emoticonRow.emoticonString;
+        tableRow.appendChild(emoticonString);
+
+        // Emoticon Category
+        let emoticonCategory = document.createElement("td");
+        emoticonCategory.innerHTML = emoticonRow.emoticonCategory;
+        tableRow.appendChild(emoticonCategory);
+
+        // Emoticon Mood
+        let emoticonMood = document.createElement("td");
+        emoticonMood.innerHTML = emoticonRow.emoticonMood;
+        tableRow.appendChild(emoticonMood);
+
+        // Date Added
+        let dateAdded = document.createElement("td");
+        dateAdded.innerHTML = emoticonRow.likedDate;
+        tableRow.appendChild(dateAdded);
+
+        // Remove Button
+        let removeButtonData = document.createElement("td");
+        removeButtonData.className = "ev-table-actions";
+        let removeButton = document.createElement("button");
+        removeButton.className = "ev-btn ev-btn-danger";
+        removeButton.innerHTML = "Remove";
+        removeButtonData.appendChild(removeButton);
+
+        removeButton.addEventListener("click", () => { removeLike(emoticonRow.emoticonId) });
+        tableRow.appendChild(removeButtonData);
+
+        tableBody.appendChild(tableRow);
+    }
+
+    // Update the num pages to reflect what the API shows
+    numPages = data.num_pages;
 }
 
 
 // TODO: REMOVE EMOTICON FROM LIKE TABLE
 async function removeLike(emoticonId) {
-    console.log("REQUESTED TO REMOVE EMOTICON " + emoticonId);
+    let num_likes;
+    try {
+        let response = await fetch(`/api/removeFavorite/${emoticonId}`);
+        let data = await response.json();
+
+        // Verify there is no error
+        if (typeof data.error !== 'undefined') {
+            console.log("There was an error deleting the Emoticon.");
+            console.log(data.error);
+            return;
+        }
+
+        num_likes = data.num_likes;
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+
+    // Re-render the emoticons table
+    await renderEmoticons();
+
+    // Update the Like Counter
+    document.querySelector("#total-favorites-value").innerHTML = num_likes;
+    
+    
 }
