@@ -164,7 +164,11 @@
                     <span class="aim-preview-sparkle" aria-hidden="true">✦</span>
 
                     <span id="previewUsername">
-                      xxLonelyPixelXx
+                      <% if (locals.session && locals.session.authenticated) { %>
+                        <%= session.name %>
+                          <% } else { %>
+                            xxLonelyPixelXx
+                            <% } %>
                     </span>
 
                     <span class="aim-preview-sparkle" aria-hidden="true">✦</span>
