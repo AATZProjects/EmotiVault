@@ -12,7 +12,7 @@ for( let i = 0; i < copyBtns.length; i++) {
 
 const starBtns = document.querySelectorAll(".starBtns");
 for(let j = 0; j < starBtns.length; j++) {
-    starBtns[i].addEventListener("click", addToFavorites);
+    starBtns[j].addEventListener("click", addToFavorites);
 }
 
 // Modifies the API parameters with user input filter options
@@ -66,7 +66,7 @@ function updateEmoticons(emoticons) {
         copyBtn.dataset.emoticon = emoticons[i].emoticonString;
         copyBtn.addEventListener("click", copyEmoticon);
 
-        starBtn.className = "ev-icon-button";
+        starBtn.className = "ev-icon-button starBtns";
         starBtn.type = "button"
         starBtn.textContent = "☆";
         starBtn.dataset.emoticonId = emoticons[i].emoticonId;
