@@ -1,9 +1,16 @@
+// Event Listeners
 const filterForm = document.querySelector(".ev-browse-filters");
 filterForm.addEventListener("submit", filterEmoticons);
 
 const submit = document.querySelector(".ev-browse-filters");
 submit.addEventListener("submit", updateEmoticons);
 
+const copyBtns = document.querySelectorAll(".copyBtns");
+for( let i = 0; i < copyBtns.length; i++) {
+    copyBtns[i].addEventListener("click", copyEmoticon);
+}
+
+// Modifies the API parameters with user input filter options
 async function filterEmoticons(event) {
     event.preventDefault();
 
@@ -17,8 +24,6 @@ async function filterEmoticons(event) {
     console.log("search: ", search);
     console.log("sort: ", sortBy);
 
-
-
     const response = await fetch(
         `/api/emoticons/filter?category=${category}&mood=${mood}&search=${search}&sortBy=${sortBy}&page=1&limit=20`);
     
@@ -27,6 +32,8 @@ async function filterEmoticons(event) {
     updateEmoticons(data.emoticons);
 } 
 
+
+// Updates the table display
 function updateEmoticons(emoticons) {
 
     const tbody = document.querySelector("#emoticon-result");
@@ -49,11 +56,15 @@ function updateEmoticons(emoticons) {
         mood.textContent = emoticons[i].emoticonMood;
         favorites.textContent = emoticons[i].emoticonFavorites;
 
-        copyBtn.className = "ev-btn ev-btn-light ev-btn-sm";
+        copyBtn.className = "ev-btn ev-btn-light ev-btn-sm copyBtns";
         copyBtn.textContent = "Copy";
+        copyBtn.dataset.emoticon = emoticons[i].emoticonString;
+        copyBtn.addEventListener("click", copyEmoticon);
+
         starBtn.className = "ev-icon-button";
         starBtn.type = "button"
         starBtn.textContent = "☆";
+        starBtn.dataset.emoticon = emoticons[i].emoticonString;
 
         actions.appendChild(copyBtn);
         actions.appendChild(starBtn);
@@ -66,4 +77,12 @@ function updateEmoticons(emoticons) {
 
         tbody.appendChild(tr);
     }
+}
+
+function copyEmoticon(event) {
+    const copyEmoticon = event.target.dataset.emoticon;
+
+    navigator.clipboard.writeText(copyEmoticon);
+    
+    console.log(copyEmoticon);
 }
