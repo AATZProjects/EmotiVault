@@ -10,6 +10,11 @@ for( let i = 0; i < copyBtns.length; i++) {
     copyBtns[i].addEventListener("click", copyEmoticon);
 }
 
+const starBtns = document.querySelectorAll(".starBtns");
+for(let j = 0; j < starBtns.length; j++) {
+    starBtns[i].addEventListener("click", addToFavorites);
+}
+
 // Modifies the API parameters with user input filter options
 async function filterEmoticons(event) {
     event.preventDefault();
@@ -64,7 +69,8 @@ function updateEmoticons(emoticons) {
         starBtn.className = "ev-icon-button";
         starBtn.type = "button"
         starBtn.textContent = "☆";
-        starBtn.dataset.emoticon = emoticons[i].emoticonString;
+        starBtn.dataset.emoticonId = emoticons[i].emoticonId;
+        starBtn.addEventListener("click", addToFavorites);
 
         actions.appendChild(copyBtn);
         actions.appendChild(starBtn);
@@ -85,4 +91,10 @@ function copyEmoticon(event) {
     navigator.clipboard.writeText(copyEmoticon);
     
     console.log(copyEmoticon);
+}
+
+function addToFavorites(event1) {
+    const favoriteEmoticons = event.target.dataset.emoticon;
+
+    console.log(favoriteEmoticons);
 }

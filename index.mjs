@@ -151,6 +151,18 @@ app.get('/browse', async (req, res) => {
                            categories,
                            moods,
                            "currentPage": page});
+
+  console.log(req.session);
+
+});
+
+app.post("/api/favorites", async(req, res) => {
+  const user = req.session.name;
+  const emoticonId = req.body.emoticonId;
+
+  let sql = `
+            `;
+
 });
 
 /*
