@@ -9,12 +9,18 @@ async function filterEmoticons(event) {
 
     const category = document.querySelector('[name="category"]').value;
     const mood = document.querySelector('[name="mood"]').value;
+    const search = document.querySelector('[name="search"]').value;
+    const sortBy = document.querySelector('[name="sort"]').value;
 
     console.log("category: ", category);
     console.log("mood: ", mood);
+    console.log("search: ", search);
+    console.log("sort: ", sortBy);
+
+
 
     const response = await fetch(
-        `/api/emoticons/filter?category=${category}&mood=${mood}&page=1&limit=20`);
+        `/api/emoticons/filter?category=${category}&mood=${mood}&search=${search}&sortBy=${sortBy}&page=1&limit=20`);
     
     const data = await response.json();
     
