@@ -1,6 +1,6 @@
 // Event Listeners
 const filterForm = document.querySelector(".ev-browse-filters");
-filterForm.addEventListener("submit", filterEmoticons);
+filterForm.addEventListener("submit", filterEmoticons); // event passed into the filterEmoticons() parameter
 
 const submit = document.querySelector(".ev-browse-filters");
 submit.addEventListener("submit", updateEmoticons);
@@ -15,10 +15,16 @@ for(let j = 0; j < starBtns.length; j++) {
     starBtns[j].addEventListener("click", addToFavorites);
 }
 
-// Modifies the API parameters with user input filter options
-async function filterEmoticons(event) {
-    event.preventDefault();
+const pageNumber = document.querySelectorAll(".ev-page-number");
+for (let p = 0; p < pageNumber.length; p++) {
+    pageNumber[p].addEventListener("click", changePage); //event passed into changePage() parameter 
+}
 
+// Global variables
+let currentPage = 1;
+
+// Modifies the API parameters with user input filter options
+async function getFilteredEmoticons() {
     const category = document.querySelector('[name="category"]').value;
     const mood = document.querySelector('[name="mood"]').value;
     const search = document.querySelector('[name="search"]').value;
@@ -30,13 +36,26 @@ async function filterEmoticons(event) {
     console.log("sort: ", sortBy);
 
     const response = await fetch(
-        `/api/emoticons/filter?category=${category}&mood=${mood}&search=${search}&sortBy=${sortBy}&page=1&limit=20`);
+        `/api/emoticons/filter?category=${category}&mood=${mood}&search=${search}&sortBy=${sortBy}&page=${currentPage}&limit=20`);
     
     const data = await response.json();
     
-    updateEmoticons(data.emoticons);
+    updateEmoticons(data.emoticons); //Becomes the emoticons parameter
+
+    console.log("Current page: ", currentPage);
+    console.log("Total filtered pages: ", data.num_pages);
+
 } 
 
+async function filterEmoticons(event) {
+    //Prevent form from natural browser submit/reload behavior
+    event.preventDefault();
+
+    //New filter search resets the page to 1
+    currentPage = 1;
+
+    getFilteredEmoticons();
+}
 
 // Updates the table display
 function updateEmoticons(emoticons) {
@@ -93,8 +112,32 @@ function copyEmoticon(event) {
     console.log(copyEmoticon);
 }
 
-function addToFavorites(event1) {
+function addToFavorites(event) {
     const favoriteEmoticons = event.target.dataset.emoticon;
 
     console.log(favoriteEmoticons);
+}
+
+// Pagination functions
+function nextPage() {
+    currentPage++;
+
+    getFilteredEmoticons();
+}
+
+function prevPage() {
+    
+    if (currentPage === 1) {
+        return;
+    } else {
+        currentPage--;
+        getFilteredEmoticons();
+    }
+}
+
+function changePage(event) {
+    event.preventDefault();
+    currentPage = Number(event.target.dataset.page);
+
+    getFilteredEmoticons();
 }

@@ -4,53 +4,62 @@
   </a>
 
   <div class="nav-links">
-    <a
-      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>"
-      href="/"
-    >
+    <a class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>" href="/">
       <img src="/imgs/emotivault_icon_home.svg" alt="" class="nav-icon" />
       <span>Home</span>
     </a>
 
-    <a
-      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'browse' ? 'active' : '' %>"
-      href="/browse"
-    >
+    <a class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'browse' ? 'active' : '' %>"
+      href="/browse">
       <img src="/imgs/emotivault_icon_browse.svg" alt="" class="nav-icon" />
       <span>Browse</span>
     </a>
 
-    <a
-      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'aim-status' ? 'active' : '' %>"
-      href="/aim-status-generator"
-    >
+    <a class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'aim-status' ? 'active' : '' %>"
+      href="/aim-status-generator">
       <img src="/imgs/emotivault_aim_buddy.svg" alt="" class="nav-icon" />
       <span>AIM Status</span>
     </a>
 
-    <a
-      class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'favorites' ? 'active' : '' %>"
-      href="/favorites"
-    >
+    <a class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'favorites' ? 'active' : '' %>"
+      href="/favorites">
       <img src="/imgs/emotivault_icon_favorites.svg" alt="" class="nav-icon" />
       <span>Favorites</span>
     </a>
 
-    <!-- Auth State: Login / Logout -->
-    <% if (locals.session && locals.session.authenticated) { %>
-      <span class="nav-item text-success fw-bold">
-        <span><%= session.name %></span>
-      </span>
-      <a class="nav-item text-danger" href="/logout">
-        <span>Logout</span>
+    <!-- Admin Navigation -->
+    <% if ( locals.session && locals.session.authenticated && locals.session.isAdmin ) { %>
+      <a class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'admin' ? 'active' : '' %>"
+        href="/admin/emoticons">
+        <img src="/imgs/emotivault_icon_admin.svg" alt="" class="nav-icon" />
+        <span>Admin</span>
       </a>
-    <% } else { %>
-      <a
-        class="nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'login' ? 'active' : '' %>"
-        href="/login"
-      >
-        <span>Login</span>
-      </a>
-    <% } %>
+      <% } %>
+
+        <!-- Auth State: Login / Logout -->
+        <div class="nav-account">
+          <% if (locals.session && locals.session.authenticated) { %>
+
+            <div class="nav-user">
+              <img src="/imgs/emotivault_user.svg" alt="" class="nav-user-icon" />
+              <span>
+                <%= session.name %>
+              </span>
+            </div>
+
+            <a class="nav-logout" href="/logout">
+              Logout
+            </a>
+
+            <% } else { %>
+
+              <a class="nav-login <%= typeof currentPage !== 'undefined' && currentPage === 'login' ? 'active' : '' %>"
+                href="/login">
+                <img src="/imgs/emotivault_user.svg" alt="" class="nav-user-icon" />
+                <span>Login</span>
+              </a>
+
+              <% } %>
+        </div>
   </div>
 </nav>
