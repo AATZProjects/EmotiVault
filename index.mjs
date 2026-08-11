@@ -126,9 +126,9 @@ app.get(['/', '/home'], async (req, res) => {
   if (req.session.authenticated) {
     console.log(
       'SESSION AUTHENTICATED AS USER: ' +
-      req.session.name +
-      ' | ID: ' +
-      req.sessionID,
+        req.session.name +
+        ' | ID: ' +
+        req.sessionID,
     );
   } else {
     console.log('No user session saved');
@@ -443,6 +443,36 @@ app.get('/logout', (req, res, next) => {
       res.redirect('/login');
     });
   });
+});
+
+app.get('/api/username-available', async (req, res) => {
+  const username =
+    typeof req.query.username === 'string' ? req.query.username.trim() : '';
+
+  if (!username) {
+    return res.status(400).json({
+      available: false,
+      message: 'Username is required.',
+    });
+  }
+
+  try {
+    const [rows] = await pool.query(
+      'SELECT userId FROM users WHERE username = ?',
+      [username],
+    );
+
+    return res.json({
+      available: rows.length === 0,
+    });
+  } catch (error) {
+    console.error('Username availability error:', error);
+
+    return res.status(500).json({
+      available: false,
+      message: 'Unable to check username availability.',
+    });
+  }
 });
 
 /*========================================
