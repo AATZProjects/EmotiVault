@@ -1,80 +1,182 @@
-<%- include("partials/header", {
-  pageTitle: "Sign Up - EmotiVault",
-  currentPage: "signup"
-}) %>
+<%- include("partials/header", { pageTitle: "Sign Up - EmotiVault" , currentPage: "signup" }) %>
 
-<main class="container ev-main">
-  <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-      <div class="ev-window">
-        <div class="ev-window-titlebar">
-          <span class="ev-window-title">Sign Up</span>
-          <div class="ev-window-controls" aria-hidden="true">
-            <span class="ev-window-control">—</span>
-            <span class="ev-window-control">□</span>
-            <span class="ev-window-control ev-window-control--close">×</span>
+  <main class="container ev-main">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="ev-window">
+          <div class="ev-window-titlebar">
+            <span class="ev-window-title">Sign Up</span>
+            <div class="ev-window-controls" aria-hidden="true">
+              <span class="ev-window-control">—</span>
+              <span class="ev-window-control">□</span>
+              <span class="ev-window-control ev-window-control--close">×</span>
+            </div>
           </div>
-        </div>
 
-        <div class="ev-window-body">
-          <form id="signupForm">
-            <div class="mb-3">
-              <label for="username" class="form-label fw-bold">Username</label>
-              <input type="text" class="form-control" id="username" name="username" required />
-            </div>
+          <div class="ev-window-body">
+            <form id="signupForm">
+              <div class="mb-3">
+                <label for="username" class="form-label fw-bold">
+                  Username
+                </label>
 
-            <div class="mb-3">
-              <label for="password" class="form-label fw-bold">Password</label>
-              <input type="password" class="form-control" id="password" name="password" required />
-            </div>
+                <div class="d-flex gap-2">
+                  <input type="text" class="form-control" id="username" name="username" required />
 
-            <div class="mb-3">
-              <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
-              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
-            </div>
+                  <button type="button" class="ev-btn ev-btn-secondary" id="generateUsernameButton">
+                    ✨ Generate
+                  </button>
+                </div>
 
-            <div class="d-grid gap-2 mt-4">
-              <button type="submit" class="ev-btn ev-btn-primary">Sign Up</button>
-            </div>
-          </form>
+                <div class="form-text ev-muted">
+                  Need inspiration? Generate an AIM-era username.
+                </div>
+              </div>
 
-          <hr class="my-4" />
+              <div class="mb-3">
+                <label for="password" class="form-label fw-bold">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required />
+              </div>
 
-          <p class="text-center mb-0 ev-muted">
-            Already have an account? <a href="/login">Log in here</a>
-          </p>
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+              </div>
+
+              <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="ev-btn ev-btn-primary">Sign Up</button>
+              </div>
+            </form>
+
+            <hr class="my-4" />
+
+            <p class="text-center mb-0 ev-muted">
+              Already have an account? <a href="/login">Log in here</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</main>
-<script>
-  document.getElementById('signupForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+  </main>
+  <script>
+    const usernameInput = document.getElementById('username');
+    const generateUsernameButton = document.getElementById(
+      'generateUsernameButton',
+    );
 
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
+    const nostalgicAdjectives = [
+      'Broken',
+      'Lonely',
+      'Midnight',
+      'Faded',
+      'Neon',
+      'Electric',
+      'Starry',
+      'Silent',
+      'Dreamy',
+      'Dark',
+      'Fallen',
+      'Secret',
+      'Lost',
+      'Pixel',
+      'Forever',
+    ];
 
-    try {
-      const response = await fetch('/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+    const nostalgicNouns = [
+      'Skies',
+      'Heart',
+      'Angel',
+      'Dreams',
+      'Star',
+      'Halo',
+      'Tears',
+      'Static',
+      'Soul',
+      'Rose',
+      'Shadow',
+      'Memory',
+      'Misfit',
+      'Vampire',
+      'Princess',
+    ];
 
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        alert('🎉 ' + result.message);
-        window.location.href = '/login';
-      } else {
-        alert('❌ Signup Failed: ' + (result.message || 'Registration failed.'));
-      }
-    } catch (err) {
-      console.error('Fetch error:', err);
-      alert('An unexpected error occurred. Please try again.');
+    function randomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
     }
-  });
-</script>
 
-<%- include("partials/footer") %>
+    function generateNostalgicUsername() {
+      const adjective = randomItem(nostalgicAdjectives);
+      const noun = randomItem(nostalgicNouns);
+
+      const patterns = [
+        () => `xX${adjective}${noun}Xx`,
+        () => `o0${adjective}${noun}0o`,
+        () => `ii${adjective}${noun}`,
+        () => `x_${adjective}${noun}_x`,
+        () => `${adjective}${noun}${Math.floor(Math.random() * 100)}`,
+        () => `${noun}Of${adjective}`,
+      ];
+
+      return randomItem(patterns)();
+    }
+
+    generateUsernameButton.addEventListener('click', async () => {
+      for (let attempt = 0; attempt < 10; attempt++) {
+        const username = generateNostalgicUsername();
+
+        try {
+          const response = await fetch(
+            `/api/username-available?username=${encodeURIComponent(username)}`,
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              data.message || 'Unable to check username availability.',
+            );
+          }
+
+          if (data.available) {
+            usernameInput.value = username;
+            return;
+          }
+        } catch (error) {
+          console.error('Username availability error:', error);
+          alert('Unable to generate a username right now.');
+          return;
+        }
+      }
+
+      alert('Could not find an available username. Try again.');
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          alert('🎉 ' + result.message);
+          window.location.href = '/login';
+        } else {
+          alert('❌ Signup Failed: ' + (result.message || 'Registration failed.'));
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        alert('An unexpected error occurred. Please try again.');
+      }
+    });
+  </script>
+
+  <%- include("partials/footer") %>
