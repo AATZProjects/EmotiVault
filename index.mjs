@@ -205,7 +205,7 @@ app.get('/favorites', isAuthenticated, async (req, res) => {
   res.render('favorites', {
     pageTitle: 'Favorites',
     currentPage: 'favorites',
-    likes: rows[0].likes,
+    likes: (rows[0].likes ?? 0),
   });
 });
 

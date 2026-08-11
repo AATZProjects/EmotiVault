@@ -18,41 +18,78 @@
 
             <!-- Rightmost, aligned with Star -->
             <div id="favorites-total-badge">
-                Total Favorites: <span id="total-favorites-value"><%= likes %></span>
+                Total Favorites: <span id="total-favorites-value">
+                    <%= likes %>
+                </span>
             </div>
         </div>
 
         <!-- Favorites Table -->
-        <div class="ev-table-container--purple">
-            <div class="ev-table-scroll">
-                <table class="ev-table">
-                    <thead>
-                        <tr>
-                            <th>Emoticon</th>
-                            <th>Category</th>
-                            <th>Mood</th>
-                            <th>Date Added</th>
-                            <th class="ev-table-actions-heading">Actions</th>
-                        </tr>
-                    </thead>
+        <% if (likes !==0) { %>
+            <div class="ev-table-container--purple">
+                <div class="ev-table-scroll">
+                    <table class="ev-table">
+                        <thead>
+                            <tr>
+                                <th>Emoticon</th>
+                                <th>Category</th>
+                                <th>Mood</th>
+                                <th>Date Added</th>
+                                <th class="ev-table-actions-heading">Actions</th>
+                            </tr>
+                        </thead>
 
-                    <tbody class="favorites-table-body">
-                        <!-- Procedurally Generated in JS -->
-                    </tbody>
-                </table>
+                        <tbody class="favorites-table-body">
+                            <!-- Procedurally Generated in JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <nav class="ev-pagination" id="pagination-bar">
+
+                    <a class="ev-page-link is-disabled" href="#" id="first-btn">
+                        « First
+                    </a>
+
+                    <a class="ev-page-link is-disabled" href="#" id="prev-btn">
+                        ‹ Prev
+                    </a>
+                </nav>
             </div>
+            <% } else { %>
+                <div class="ev-window">
 
-            <nav class="ev-pagination" id="pagination-bar">
+                    <div class="ev-window-titlebar">
+                        <span class="ev-window-title">
+                            Warning!
+                        </span>
 
-                <a class="ev-page-link is-disabled" href="#" id="first-btn">
-                    « First
-                </a>
+                        <div class="ev-window-controls" aria-hidden="true">
+                            <span class="ev-window-control">—</span>
+                            <span class="ev-window-control">□</span>
+                            <span class="ev-window-control ev-window-control--close">×</span>
+                        </div>
+                    </div>
 
-                <a class="ev-page-link is-disabled" href="#" id="prev-btn">
-                    ‹ Prev
-                </a>
-            </nav>
-        </div>
+                    <div class="ev-window-body">
+                        <div class="ev-panel">
+                            <div class="ev-panel-header">
+                                You have no favorites!
+                            </div>
+
+                            <div class="ev-panel-body">
+                                You currently have no favorites saved! Start browsing the emoticon vault and start
+                                building your collection!
+                            </div>
+                        </div>
+                        <br>
+                        <a class="ev-btn ev-btn-light" href="/browse">
+                            Browse the Vault!
+                        </a>
+                    </div>
+
+                </div>
+                <% } %>
 
     </main>
 

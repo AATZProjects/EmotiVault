@@ -1,6 +1,6 @@
 let numPages = 0;
 let currentPage = 1;
-let pageSize = 2;                   // TODO: REMOVE THE LIMIT LINE WHEN DONE WITH DEBUGGING
+let pageSize = 15;
 
 // When the page loads, request the favorites information using the User ID
 document.addEventListener("DOMContentLoaded", initPage);
@@ -8,6 +8,14 @@ document.querySelector("#first-btn").addEventListener("click", () => { changePag
 document.querySelector("#prev-btn").addEventListener("click", () => { changePage(currentPage - 1) });
 
 async function initPage() {
+    // Check if there are any emoticons to display
+    let response = await fetch(`/api/userFavorites?page=${currentPage}&limit=${pageSize}`);
+    let data = await response.json();
+
+    if (data.emoticons === undefined | data.emoticons.length == 0) {
+        // Display the add emoticons screen and hide the emoticons
+    }
+
     await renderEmoticons();
 
     await renderPageButtons();
@@ -68,7 +76,9 @@ async function changePage(newPage) {
 
     // Remove the active button class and set the new one
     let currentActive = document.querySelector(`#page-button-${currentPage}`);
-    currentActive.className = "ev-page-link";
+    if (currentActive) {
+        currentActive.className = "ev-page-link";
+    }
 
     let newActive = document.querySelector(`#page-button-${newPage}`);
     newActive.className = "ev-page-link is-active";
@@ -154,9 +164,9 @@ async function renderEmoticons() {
 }
 
 
-// TODO: REMOVE EMOTICON FROM LIKE TABLE
 async function removeLike(emoticonId) {
-    let num_likes;
+
+    let num_likes = 0;
     try {
         let response = await fetch(`/api/removeFavorite/${emoticonId}`);
         let data = await response.json();
@@ -168,17 +178,34 @@ async function removeLike(emoticonId) {
             return;
         }
 
-        num_likes = data.num_likes;
+        num_likes = data.num_likes ?? 0;
     } catch (error) {
         console.error(error);
         return;
     }
 
+    let oldNumPages = numPages;
     // Re-render the emoticons table
     await renderEmoticons();
 
     // Update the Like Counter
     document.querySelector("#total-favorites-value").innerHTML = num_likes;
-    
-    
+
+    // If we're back to zero likes, then refresh the page
+    if (num_likes === 0) {
+        window.location.reload();
+    }
+
+    // If our number of pages have updated, delete the last page
+    if (oldNumPages > numPages) {
+        // Delete the button for the page
+        let pageButton = document.querySelector(`#page-button-${oldNumPages}`).remove();
+    }
+
+    // If we've went down from the last page, step down the page
+    if (currentPage > numPages) {
+        await changePage(numPages);
+    }
+
+
 }
