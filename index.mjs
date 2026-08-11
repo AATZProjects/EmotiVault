@@ -3,7 +3,7 @@ import 'dotenv/config'; // Load environment variables first
 import express from 'express';
 import mysql from 'mysql2/promise';
 
-import session from 'express-session';    // Saving user sessions
+import session from 'express-session'; // Saving user sessions
 
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
@@ -15,15 +15,17 @@ app.use(express.static('public'));
 
 // For Saving User Sessions
 app.set('trust proxy', 1);
-app.use(session({
-  secret: process.env.SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 14 * 24 * 60 * 60 * 1000,   // 14 days (total maxAge is measured in milliseconds)
-    secure: process.env.NODE_ENV === 'production',    // false on localhost, true on production - will require HTTPS when the webpage is published
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days (total maxAge is measured in milliseconds)
+      secure: process.env.NODE_ENV === 'production', // false on localhost, true on production - will require HTTPS when the webpage is published
+    },
+  }),
+);
 
 //for Express to get values using POST method
 app.use(express.urlencoded({ extended: true }));
@@ -65,7 +67,9 @@ passport.serializeUser((user, done) => {
 // Deserialize user object from session ID
 passport.deserializeUser(async (id, done) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM users WHERE userId = ?', [id]);
+    const [rows] = await pool.query('SELECT * FROM users WHERE userId = ?', [
+      id,
+    ]);
     done(null, rows[0]);
   } catch (err) {
     done(err, null);
@@ -73,36 +77,43 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // Configure Google OAuth Strategy
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      const googleId = profile.id;
-      const username = profile.displayName;
-      const email = profile.emails && profile.emails[0] ? profile.emails[0].value : '';
-      const avatarUrl = profile.photos && profile.photos[0] ? profile.photos[0].value : '';
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: '/auth/google/callback',
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const googleId = profile.id;
+        const username = profile.displayName;
+        const email =
+          profile.emails && profile.emails[0] ? profile.emails[0].value : '';
+        const avatarUrl =
+          profile.photos && profile.photos[0] ? profile.photos[0].value : '';
 
-      // Insert or update user credentials in MySQL database
-      const sql = `
+        // Insert or update user credentials in MySQL database
+        const sql = `
         INSERT INTO users (googleId, username, email, avatarUrl)
         VALUES (?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE username = VALUES(username), avatarUrl = VALUES(avatarUrl)
       `;
-      await pool.query(sql, [googleId, username, email, avatarUrl]);
+        await pool.query(sql, [googleId, username, email, avatarUrl]);
 
-      // Fetch newly inserted/updated user record
-      const [rows] = await pool.query('SELECT * FROM users WHERE googleId = ?', [googleId]);
-      return done(null, rows[0]);
-    } catch (error) {
-      console.error('Google OAuth DB Error:', error);
-      return done(error, null);
-    }
-  }
-));
-
+        // Fetch newly inserted/updated user record
+        const [rows] = await pool.query(
+          'SELECT * FROM users WHERE googleId = ?',
+          [googleId],
+        );
+        return done(null, rows[0]);
+      } catch (error) {
+        console.error('Google OAuth DB Error:', error);
+        return done(error, null);
+      }
+    },
+  ),
+);
 
 /*
 =============================================
@@ -113,11 +124,16 @@ passport.use(new GoogleStrategy({
 app.get(['/', '/home'], async (req, res) => {
   // DEBUG: Check if user is logged in
   if (req.session.authenticated) {
-    console.log("SESSION AUTHENTICATED AS USER: " + req.session.name + " | ID: " + req.session.userId);
+    console.log(
+      'SESSION AUTHENTICATED AS USER: ' +
+        req.session.name +
+        ' | ID: ' +
+        req.sessionID,
+    );
   } else {
-    console.log("No user session saved");
+    console.log('No user session saved');
   }
-  
+
   try {
     // 1. Calculate the current day of the year (1 - 366) for daily rotation
     const now = new Date();
@@ -126,7 +142,9 @@ app.get(['/', '/home'], async (req, res) => {
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
 
     // 2. Fetch total count of emoticons
-    const [countRows] = await pool.query('SELECT COUNT(*) AS total FROM emoticons');
+    const [countRows] = await pool.query(
+      'SELECT COUNT(*) AS total FROM emoticons',
+    );
     const totalEmoticons = countRows[0]?.total || 1;
 
     // 3. Modulo operator for seamless daily wrapping
@@ -155,10 +173,19 @@ app.get(['/', '/home'], async (req, res) => {
 
     // 6. Generate random face and nostalgia score
     const nostalgiaList = [
-      'd(^_^)b', '(¬_¬)', '(*/ω＼*)', '(┬_┬)', 'c( O.o )b', 
-      '(*^▽^*)', '¯\\_(ツ)_/¯', '(>_<)', '(;¬_¬)', 'o(TヘTo)'
+      'd(^_^)b',
+      '(¬_¬)',
+      '(*/ω＼*)',
+      '(┬_┬)',
+      'c( O.o )b',
+      '(*^▽^*)',
+      '¯\\_(ツ)_/¯',
+      '(>_<)',
+      '(;¬_¬)',
+      'o(TヘTo)',
     ];
-    const randomFace = nostalgiaList[Math.floor(Math.random() * nostalgiaList.length)];
+    const randomFace =
+      nostalgiaList[Math.floor(Math.random() * nostalgiaList.length)];
     const randomLevel = Math.floor(Math.random() * 16) + 85; // Random integer between 85% and 100%
 
     // 7. Render homepage view
@@ -166,9 +193,13 @@ app.get(['/', '/home'], async (req, res) => {
       pageTitle: 'Home - EmotiVault',
       currentPage: 'home',
       dailyEmoticon: dailyRows[0] || null,
-      stats: statsRows[0] || { totalEmoticons: 0, totalCategories: 6, totalMoods: 12 },
+      stats: statsRows[0] || {
+        totalEmoticons: 0,
+        totalCategories: 6,
+        totalMoods: 12,
+      },
       nostalgiaFace: randomFace,
-      nostalgiaLevel: randomLevel
+      nostalgiaLevel: randomLevel,
     });
   } catch (error) {
     console.error('Home page database error:', error);
@@ -217,16 +248,193 @@ app.get('/styleguide', (req, res) => {
 });
 
 /*========================================
+  ADMIN ROUTES
+  ========================================
+*/
+
+app.get('/admin/emoticons', isAdmin, async (req, res) => {
+  try {
+    const limit = 20;
+
+    let page = Number(req.query.page) || 1;
+
+    if (page < 1) {
+      page = 1;
+    }
+
+    const [countRows] = await pool.query(
+      'SELECT COUNT(*) AS total FROM emoticons',
+    );
+
+    const totalEmoticons = countRows[0].total;
+    const totalPages = Math.ceil(totalEmoticons / limit);
+
+    if (page > totalPages && totalPages > 0) {
+      page = totalPages;
+    }
+
+    const offset = (page - 1) * limit;
+
+    const [emoticons] = await pool.query(
+      `
+        SELECT
+          emoticonId,
+          emoticonName,
+          emoticonString,
+          emoticonCategory,
+          emoticonMood
+        FROM emoticons
+        ORDER BY emoticonId ASC
+        LIMIT ? OFFSET ?
+      `,
+      [limit, offset],
+    );
+
+    return res.render('admin-emoticons', {
+      pageTitle: 'Manage Emoticons',
+      currentPage: 'admin',
+      emoticons,
+      totalEmoticons,
+      currentPageNumber: page,
+      totalPages,
+    });
+  } catch (error) {
+    console.error('Admin emoticon page error:', error);
+
+    return res.status(500).send('Unable to load emoticons.');
+  }
+});
+
+app.get('/admin/emoticons/:emoticonId/edit', isAdmin, async (req, res) => {
+  const emoticonId = Number(req.params.emoticonId);
+
+  try {
+    const [rows] = await pool.query(
+      `
+        SELECT
+          emoticonId,
+          emoticonName,
+          emoticonString,
+          emoticonCategory,
+          emoticonMood
+        FROM emoticons
+        WHERE emoticonId = ?
+      `,
+      [emoticonId],
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).send('Emoticon not found.');
+    }
+
+    return res.render('admin-edit-emoticon', {
+      pageTitle: 'Edit Emoticon',
+      currentPage: 'admin',
+      emoticon: rows[0],
+    });
+  } catch (error) {
+    console.error('Admin edit emoticon error:', error);
+
+    return res.status(500).send('Unable to load emoticon.');
+  }
+});
+
+app.post('/admin/emoticons/:emoticonId/edit', isAdmin, async (req, res) => {
+  const emoticonId = Number(req.params.emoticonId);
+
+  const { emoticonName, emoticonString, emoticonCategory, emoticonMood } =
+    req.body;
+
+  if (!Number.isInteger(emoticonId) || emoticonId < 1) {
+    return res.status(400).send('Invalid emoticon ID.');
+  }
+
+  if (
+    !emoticonName?.trim() ||
+    !emoticonString?.trim() ||
+    !emoticonCategory?.trim() ||
+    !emoticonMood?.trim()
+  ) {
+    return res.status(400).send('All fields are required.');
+  }
+
+  const allowedCategories = [
+    'Classic',
+    'Upright',
+    'Unicode',
+    'Kaomoji',
+    'Misc',
+    '2Channel',
+  ];
+
+  const allowedMoods = [
+    'Happy',
+    'Sad',
+    'Angry',
+    'Love',
+    'Surprised',
+    'Confused',
+    'Embarrassed',
+    'Playful',
+    'Neutral',
+    'Sleepy',
+    'Cool',
+    'Respect',
+  ];
+
+  if (!allowedCategories.includes(emoticonCategory)) {
+    return res.status(400).send('Invalid category.');
+  }
+
+  if (!allowedMoods.includes(emoticonMood)) {
+    return res.status(400).send('Invalid mood.');
+  }
+
+  try {
+    const [result] = await pool.query(
+      `
+        UPDATE emoticons
+        SET
+          emoticonName = ?,
+          emoticonString = ?,
+          emoticonCategory = ?,
+          emoticonMood = ?
+        WHERE emoticonId = ?
+      `,
+      [
+        emoticonName.trim(),
+        emoticonString.trim(),
+        emoticonCategory,
+        emoticonMood,
+        emoticonId,
+      ],
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send('Emoticon not found.');
+    }
+
+    return res.redirect('/admin/emoticons');
+  } catch (error) {
+    console.error('Admin update emoticon error:', error);
+
+    return res.status(500).send('Unable to update emoticon.');
+  }
+});
+
+/*========================================
   OAuth & Authentication Routes
   ========================================
 */
 // Initiate Google OAuth login
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
+app.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] }),
 );
 
 // Google OAuth callback endpoint
-app.get('/auth/google/callback', 
+app.get(
+  '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
     // Sync session variables for backward compatibility
@@ -234,18 +442,51 @@ app.get('/auth/google/callback',
     req.session.name = req.user.username;
     req.session.userId = req.user.userId;
     
+
     res.redirect('/');
-  }
+  },
 );
 
 // User logout endpoint
 app.get('/logout', (req, res, next) => {
   req.logout((err) => {
-    if (err) { return next(err); }
+    if (err) {
+      return next(err);
+    }
     req.session.destroy(() => {
       res.redirect('/login');
     });
   });
+});
+
+app.get('/api/username-available', async (req, res) => {
+  const username =
+    typeof req.query.username === 'string' ? req.query.username.trim() : '';
+
+  if (!username) {
+    return res.status(400).json({
+      available: false,
+      message: 'Username is required.',
+    });
+  }
+
+  try {
+    const [rows] = await pool.query(
+      'SELECT userId FROM users WHERE username = ?',
+      [username],
+    );
+
+    return res.json({
+      available: rows.length === 0,
+    });
+  } catch (error) {
+    console.error('Username availability error:', error);
+
+    return res.status(500).json({
+      available: false,
+      message: 'Unable to check username availability.',
+    });
+  }
 });
 
 /*========================================
@@ -263,11 +504,10 @@ app.get('/browse', async (req, res) => {
              GROUP BY e.emoticonId
              ORDER BY e.emoticonId
              LIMIT ? OFFSET ?`;
-          
-  const params = [limit, offset]
+
+  const params = [limit, offset];
   const [emoticons] = await pool.query(sql, params);
-  res.render('emoticons', {emoticons, 
-                           "currentPage": page});
+  res.render('emoticons', { emoticons, currentPage: page });
 });
 
 /*
@@ -282,7 +522,7 @@ app.post('/login', async (req, res) => {
   try {
     const [rows] = await pool.query(
       'SELECT * FROM users WHERE username = ? AND password = ?',
-      [username, password]
+      [username, password],
     );
 
     if (rows.length > 0) {
@@ -290,14 +530,19 @@ app.post('/login', async (req, res) => {
       req.session.authenticated = true;
       req.session.name = user.username;
       req.session.userId = user.userId;
+      req.session.isAdmin = user.isAdmin;
 
       return res.json({ success: true, redirectUrl: '/' });
     } else {
-      return res.status(401).json({ success: false, message: 'Invalid username or password.' });
+      return res
+        .status(401)
+        .json({ success: false, message: 'Invalid username or password.' });
     }
   } catch (error) {
     console.error('Login error:', error);
-    return res.status(500).json({ success: false, message: 'Database error during login.' });
+    return res
+      .status(500)
+      .json({ success: false, message: 'Database error during login.' });
   }
 });
 
@@ -306,20 +551,35 @@ app.post('/signup', async (req, res) => {
   const { username, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
-    return res.status(400).json({ success: false, message: 'Passwords do not match.' });
+    return res
+      .status(400)
+      .json({ success: false, message: 'Passwords do not match.' });
   }
 
   try {
-    const [existing] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    const [existing] = await pool.query(
+      'SELECT * FROM users WHERE username = ?',
+      [username],
+    );
     if (existing.length > 0) {
-      return res.status(400).json({ success: false, message: 'Username is already taken.' });
+      return res
+        .status(400)
+        .json({ success: false, message: 'Username is already taken.' });
     }
 
-    await pool.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password]);
-    return res.json({ success: true, message: 'Account created successfully! You can now log in.' });
+    await pool.query('INSERT INTO users (username, password) VALUES (?, ?)', [
+      username,
+      password,
+    ]);
+    return res.json({
+      success: true,
+      message: 'Account created successfully! You can now log in.',
+    });
   } catch (error) {
     console.error('Signup error:', error);
-    return res.status(500).json({ success: false, message: 'Database error during signup.' });
+    return res
+      .status(500)
+      .json({ success: false, message: 'Database error during signup.' });
   }
 });
 
@@ -327,10 +587,23 @@ app.post('/signup', async (req, res) => {
 function isAuthenticated(req, res, next) {
   // If the user is not yet authenticated (logged in), redirect them to the login page
   if (!req.session.authenticated) {
-    res.redirect("/login");
+    res.redirect('/login');
   } else {
     next();
   }
+}
+
+// Middleware to restrict routes to administrators
+function isAdmin(req, res, next) {
+  if (!req.session.authenticated) {
+    return res.redirect('/login');
+  }
+
+  if (!req.session.isAdmin) {
+    return res.status(403).send('Access denied.');
+  }
+
+  next();
 }
 
 /*
