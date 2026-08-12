@@ -104,13 +104,13 @@
     </div>
 
     <!-- Updates the visibility of the page navigation buttons-->
-    <nav class="ev-pagination">
+    <nav class="ev-pagination" id="paginationBar">
         <% if (currentPage == 1) {%>
-            <a class="ev-page-link is-disabled" href="/browse?page=1">
+            <a class="ev-page-link is-disabled firstBtn" href="/browse?page=1">
             ‹‹ First
             </a>
         <% } else { %>
-            <a class="ev-page-link" href="/browse?page=1">
+            <a class="ev-page-link firstBtn" href="/browse?page=1">
             ‹‹ First
             </a>
         <% } %>
@@ -156,24 +156,24 @@
 
         <a class="ev-page-ellipsis">...</a>  
 
-        <% if (currentPage == 24) { %>
-            <a class="ev-page-link is-active ev-page-number" href="/browse?page=24" data-page="24">24</a>
+        <% if (currentPage == 28) { %>
+            <a class="ev-page-link is-active ev-page-number" href="/browse?page=28" data-page="28">28</a>
             <% } else { %>
-            <a class="ev-page-link ev-page-number" href="/browse?page=24" data-page="24">24</a>
+            <a class="ev-page-link ev-page-number" href="/browse?page=28" data-page="28">28</a>
         <% } %>
 
-        <% if (currentPage == 24) { %>
+        <% if (currentPage == 28) { %>
             <a class="ev-page-link is-disabled nextBtn" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
         <% } else { %>
             <a class="ev-page-link nextBtn" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
         <% } %>
 
-        <% if (currentPage == 24) { %>
-            <a class="ev-page-link is-disabled" href="/browse?page=24 %>">
+        <% if (currentPage == 28) { %>
+            <a class="ev-page-link is-disabled lastBtn" href="/browse?page=28 %>">
             Last ››
             </a>
         <% } else { %>
-            <a class="ev-page-link" href="/browse?page=<%=currentPage + 1 %>">Last ››</a>
+            <a class="ev-page-link lastBtn" href="/browse?page=28">Last ››</a>
         <% } %>
 
 
@@ -188,7 +188,7 @@
                         <h3>Make it Uniquely you!</h3>  
                         <p>Explore thousands of classic emoticons <br>
                             and find the ones that speak to you.</p>
-                        <img src="imgs/emotivault_heart" alt="heart decor" class="pixelHeart">
+                        <img src="imgs/emotivault_icon_heart.svg" alt="heart decor" class="pixelHeart">
                     </div>
                 </div>
             </div>
@@ -201,8 +201,8 @@
             </div>
 
             <div class="decorArt">
-                <img src="imgs/emotivault_computer" alt="computer decor" class="pixelComputer">
-                <img src="imgs/emotivault_rainbow" alt="rainbow decor" class="pixelRainbow">
+                <img src="imgs/emotivault_computer_buddy.svg" alt="computer decor" class="pixelComputer">
+                <img src="imgs/emotivault_icon_rainbow.svg" alt="rainbow decor" class="pixelRainbow">
             </div>
         </div>
     </section>

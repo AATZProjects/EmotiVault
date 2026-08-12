@@ -1,3 +1,9 @@
+
+// Global variables
+let currentPage = 1;
+let numPages = 0;
+let limit = 20;
+
 // Event Listeners
 const filterForm = document.querySelector(".ev-browse-filters");
 filterForm.addEventListener("submit", filterEmoticons); // event passed into the filterEmoticons() parameter
@@ -20,18 +26,20 @@ for (let p = 0; p < pageNumber.length; p++) {
     pageNumber[p].addEventListener("click", changePage); //event passed into changePage() parameter 
 }
 
-const nextBtn = document.querySelectorAll(".nextBtn");
-for (let n = 0; n < nextBtn.length; n++) {
-    nextBtn[n].addEventListener("click", nextPage); //event passed into nextPage() parameter 
-}
+async function initPage() {
 
-const prevBtn = document.querySelectorAll(".prevBtn");
-for (let prev = 0; prev < prevBtn.length; prev++) {
-    prevBtn[prev].addEventListener("click", prevPage); //event passed into prevPage() parameter 
-}
+    console.log("Init Page ran!");
+    const response = await fetch(`/api/emoticons/all?page=${currentPage}&limit=${limit}`);
+    console.log("Response obtained!");
+    const data = await response.json();
+    console.log("Data stored!");
+    console.log(data);
 
-// Global variables
-let currentPage = 1;
+
+    numPages = data.num_pages;
+    console.log("num pages: ", numPages);
+    updatePaginationBar();
+}
 
 // Modifies the API parameters with user input filter options
 async function getFilteredEmoticons() {
@@ -49,22 +57,25 @@ async function getFilteredEmoticons() {
         `/api/emoticons/filter?category=${category}&mood=${mood}&search=${search}&sortBy=${sortBy}&page=${currentPage}&limit=20`);
     
     const data = await response.json();
+
+    numPages = data.num_pages;
     
     updateEmoticons(data.emoticons); //Becomes the emoticons parameter
+    updatePaginationBar();
 
     console.log("Current page: ", currentPage);
     console.log("Total filtered pages: ", data.num_pages);
-
 } 
 
 async function filterEmoticons(event) {
-    //Prevent form from natural browser submit/reload behavior
+    //Prevent form from natural browser behavior
     event.preventDefault();
 
     //New filter search resets the page to 1
     currentPage = 1;
 
     getFilteredEmoticons();
+    updatePaginationBar();
 }
 
 // Updates the table display
@@ -84,7 +95,6 @@ function updateEmoticons(emoticons) {
         const copyBtn = document.createElement("button");
         const starBtn = document.createElement("button");
     
-
         emoticonString.textContent = emoticons[i].emoticonString;
         category.textContent = emoticons[i].emoticonCategory;
         mood.textContent = emoticons[i].emoticonMood;
@@ -114,6 +124,101 @@ function updateEmoticons(emoticons) {
     }
 }
 
+//Updates the page bar to display number of pages according to the amount of emoicons returned 
+function updatePaginationBar() {
+
+    let startPage;
+    let endPage;
+
+    // Limit the pages displayed at a time
+    if (currentPage <= 5) {
+        endPage = 5; //default 
+        
+        if (endPage > numPages) {
+            endPage = numPages;
+        }
+
+    } else {
+        endPage = currentPage;
+    }
+
+    startPage = endPage - 4;
+
+    if (startPage < 1 ) {
+        startPage = 1;
+    }
+
+    let paginationBar = document.querySelector("#paginationBar");
+    paginationBar.replaceChildren();
+
+    let firstBtn = document.createElement("a");
+    let prevBtn = document.createElement("a");
+
+    firstBtn.href = "#";
+    prevBtn.href = "#";
+    
+    firstBtn.textContent = "‹‹ First";
+    prevBtn.textContent = "‹ Prev";
+
+    firstBtn.className = "ev-page-link firstBtn";
+    prevBtn.className = "ev-page-link prevBtn";
+
+    firstBtn.addEventListener("click", firstPage);
+    prevBtn.addEventListener("click", prevPage);
+
+    paginationBar.appendChild(firstBtn);
+    paginationBar.appendChild(prevBtn);
+
+    for (let page = startPage; page <= endPage; page++) {
+
+        let pageButton = document.createElement("a");
+        pageButton.className = "ev-page-link";
+        pageButton.href = "#";
+
+        if (page === currentPage) {
+            pageButton.className = "ev-page-link is-active";
+        }
+        
+        if (currentPage === 1) {
+            prevBtn.className = "ev-page-link prevBtn is-disabled";
+            firstBtn.className = "ev-page-link firstBtn is-disabled";
+        }
+
+        pageButton.textContent = page;
+        pageButton.dataset.page = page;
+        pageButton.id = `page-button-${page}`;
+
+        pageButton.addEventListener("click", changePage);
+
+        paginationBar.appendChild(pageButton);
+    }
+
+    //Next, and Last buttons
+
+    let nextBtn = document.createElement("a");
+    let lastBtn = document.createElement("a");
+
+    nextBtn.href = "#";
+    lastBtn.href = "#";
+
+    nextBtn.textContent = "Next ›";
+    lastBtn.textContent = "Last ››";
+
+    nextBtn.className = "ev-page-link nextBtn";
+    lastBtn.className = "ev-page-link lastBtn";
+
+    nextBtn.addEventListener("click", nextPage);
+    lastBtn.addEventListener("click", lastPage);
+
+    if (currentPage === numPages) {
+        nextBtn.className = "ev-page-link nextBtn is-disabled";
+        lastBtn.className = "ev-page-link lastBtn is-disabled";
+    }
+
+    paginationBar.appendChild(nextBtn);
+    paginationBar.appendChild(lastBtn);
+}
+
 function copyEmoticon(event) {
     const copyEmoticon = event.target.dataset.emoticon;
 
@@ -131,9 +236,9 @@ function addToFavorites(event) {
 // Pagination functions
 function nextPage(event) {
     event.preventDefault();
-
-    currentPage++;
-
+    if (currentPage < numPages){
+        currentPage++;
+    }
     getFilteredEmoticons();
 }
 
@@ -148,9 +253,25 @@ function prevPage(event) {
     }
 }
 
+function firstPage(event) {
+    event.preventDefault();
+    currentPage = 1;
+
+    getFilteredEmoticons();
+}
+
+function lastPage(event) {
+    event.preventDefault();
+    currentPage = numPages;
+
+    getFilteredEmoticons();
+}
+
 function changePage(event) {
     event.preventDefault();
     currentPage = Number(event.target.dataset.page);
 
     getFilteredEmoticons();
 }
+
+initPage();
