@@ -116,11 +116,11 @@
         <% } %>
 
         <% if (currentPage > 1) { %>
-            <a class="ev-page-link" href="/browse?page=<%=currentPage - 1%>">
+            <a class="ev-page-link prevBtn" href="/browse?page=<%=currentPage - 1%>">
             ‹ Prev
             </a>
         <% } else { %>
-            <a class="ev-page-link is-disabled" href="/browse?page=<%=currentPage - 1 %>">
+            <a class="ev-page-link is-disabled prevBtn" href="/browse?page=<%=currentPage - 1 %>">
             ‹ Prev
             </a>
         <% } %>
@@ -163,9 +163,9 @@
         <% } %>
 
         <% if (currentPage == 24) { %>
-            <a class="ev-page-link is-disabled" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
+            <a class="ev-page-link is-disabled nextBtn" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
         <% } else { %>
-            <a class="ev-page-link" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
+            <a class="ev-page-link nextBtn" href="/browse?page=<%=currentPage + 1 %>">Next ›</a>
         <% } %>
 
         <% if (currentPage == 24) { %>

@@ -20,6 +20,16 @@ for (let p = 0; p < pageNumber.length; p++) {
     pageNumber[p].addEventListener("click", changePage); //event passed into changePage() parameter 
 }
 
+const nextBtn = document.querySelectorAll(".nextBtn");
+for (let n = 0; n < nextBtn.length; n++) {
+    nextBtn[n].addEventListener("click", nextPage); //event passed into nextPage() parameter 
+}
+
+const prevBtn = document.querySelectorAll(".prevBtn");
+for (let prev = 0; prev < prevBtn.length; prev++) {
+    prevBtn[prev].addEventListener("click", prevPage); //event passed into prevPage() parameter 
+}
+
 // Global variables
 let currentPage = 1;
 
@@ -119,13 +129,16 @@ function addToFavorites(event) {
 }
 
 // Pagination functions
-function nextPage() {
+function nextPage(event) {
+    event.preventDefault();
+
     currentPage++;
 
     getFilteredEmoticons();
 }
 
-function prevPage() {
+function prevPage(event) {
+    event.preventDefault();
     
     if (currentPage === 1) {
         return;
