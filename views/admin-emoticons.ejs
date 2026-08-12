@@ -1,0 +1,189 @@
+<%- include("partials/header", { pageTitle: pageTitle, currentPage: currentPage }) %>
+
+  <main class="container ev-main">
+
+    <!-- =====================================================
+       ADMIN EMOTICON MANAGEMENT
+       ===================================================== -->
+
+    <div class="ev-window">
+      <div class="ev-window-titlebar">
+        <span class="ev-window-title">
+          Site Administrator - Manage Emoticons
+        </span>
+
+        <div class="ev-window-controls">
+          <span class="ev-window-control">—</span>
+          <span class="ev-window-control">□</span>
+          <span class="ev-window-control ev-window-control--close">×</span>
+        </div>
+      </div>
+
+      <div class="ev-window-body">
+
+        <!-- Page description -->
+        <div class="mb-4">
+          <h1 class="ev-section-title mb-2">
+            Manage Emoticons
+          </h1>
+
+          <p class="ev-muted mb-0">
+            View and edit emoticons stored in the EmotiVault database.
+          </p>
+        </div>
+
+        <!-- Emoticon count -->
+        <div class="ev-panel mb-4">
+          <div class="ev-panel-body py-2">
+            <strong>
+              Total Emoticons:
+            </strong>
+
+            <span>
+              <%= totalEmoticons %>
+            </span>
+          </div>
+        </div>
+
+        <!-- =====================================================
+           EMOTICON TABLE
+           ===================================================== -->
+
+        <div class="ev-table-container">
+
+          <div class="ev-table-scroll">
+            <table class="ev-table">
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Emoticon</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Mood</th>
+                  <th class="ev-table-actions-heading">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <% if (emoticons && emoticons.length> 0) { %>
+
+                  <% emoticons.forEach((emoticon)=> { %>
+
+                    <tr>
+
+                      <!-- ID -->
+                      <td>
+                        <%= emoticon.emoticonId %>
+                      </td>
+
+                      <!-- Emoticon string -->
+                      <td class="ev-table-emoticon">
+                        <%= emoticon.emoticonString %>
+                      </td>
+
+                      <!-- Internal name -->
+                      <td>
+                        <%= emoticon.emoticonName %>
+                      </td>
+
+                      <!-- Category -->
+                      <td>
+                        <%= emoticon.emoticonCategory %>
+                      </td>
+
+                      <!-- Mood -->
+                      <td>
+                        <% const moodClass='ev-mood-' + emoticon.emoticonMood.toLowerCase(); %>
+
+                          <span class="ev-mood-badge <%= moodClass %>">
+                            <%= emoticon.emoticonMood %>
+                          </span>
+                      </td>
+
+                      <!-- Actions -->
+                      <td class="ev-table-actions">
+
+                        <a href="/admin/emoticons/<%= emoticon.emoticonId %>/edit"
+                          class="ev-btn ev-btn-primary ev-btn-sm">
+                          Edit
+                        </a>
+
+                      </td>
+
+                    </tr>
+
+                    <% }) %>
+
+                      <% } else { %>
+
+                        <tr>
+                          <td colspan="6" class="text-center py-4 ev-muted">
+                            No emoticons were found.
+                          </td>
+                        </tr>
+
+                        <% } %>
+
+              </tbody>
+
+            </table>
+
+          </div>
+          <nav class="ev-pagination">
+
+            <!-- First -->
+            <a class="ev-page-link <%= currentPageNumber === 1 ? 'is-disabled' : '' %>" href="/admin/emoticons?page=1">
+              « First
+            </a>
+
+            <!-- Previous -->
+            <a class="ev-page-link <%= currentPageNumber === 1 ? 'is-disabled' : '' %>"
+              href="/admin/emoticons?page=<%= currentPageNumber - 1 %>">
+              ‹ Prev
+            </a>
+
+            <!-- Page numbers -->
+            <% for (let page=1; page <=totalPages; page++) { %>
+
+              <% if ( page===1 || page===totalPages || (page>= currentPageNumber - 2 &&
+                page <= currentPageNumber + 2) ) { %>
+
+                  <a class="ev-page-link <%= page === currentPageNumber ? 'is-active' : '' %>"
+                    href="/admin/emoticons?page=<%= page %>">
+                    <%= page %>
+                  </a>
+
+                  <% } else if ( page===currentPageNumber - 3 || page===currentPageNumber + 3 ) { %>
+
+                    <span class="ev-page-ellipsis">
+                      …
+                    </span>
+
+                    <% } %>
+
+                      <% } %>
+
+                        <a class="ev-page-link <%= currentPageNumber === totalPages ? 'is-disabled' : '' %>"
+                          href="/admin/emoticons?page=<%= currentPageNumber + 1 %>">
+                          Next ›
+                        </a>
+
+                        <a class="ev-page-link <%= currentPageNumber === totalPages ? 'is-disabled' : '' %>"
+                          href="/admin/emoticons?page=<%= totalPages %>">
+                          Last »
+                        </a>
+
+          </nav>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <%- include("partials/footer") %>
