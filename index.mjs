@@ -228,6 +228,18 @@ app.get('/aim-status-generator', (req, res) => {
   });
 });
 
+app.get('/favorites', isAuthenticated, async (req, res) => {
+  // Get the number of liked emoticons
+  let sql = `SELECT COUNT(userId) AS likes FROM userFavorites WHERE userId = ?`;
+  let [rows] = await pool.query(sql, req.session.userId);
+  
+  res.render('favorites', {
+    pageTitle: 'Favorites',
+    currentPage: 'favorites',
+    likes: (rows[0].likes ?? 0),
+  });
+});
+
 app.get('/styleguide', (req, res) => {
   res.render('styleguide', {
     pageTitle: 'Style Guide',
@@ -428,6 +440,8 @@ app.get(
     // Sync session variables for backward compatibility
     req.session.authenticated = true;
     req.session.name = req.user.username;
+    req.session.userId = req.user.userId;
+    
 
     res.redirect('/');
   },
@@ -765,6 +779,47 @@ app.get('/dbTest', async (req, res) => {
 
 /*
 =============================================
+  User Favorites APIs
+=============================================
+*/
+
+app.get('/api/userFavorites', async (req, res) => {
+  try {
+    let [rows] = await pool.query(`
+    SELECT e.emoticonId, e.emoticonName, e.emoticonString, e.emoticonCategory, e.emoticonMood, DATE_FORMAT(f.likedDate, '%m/%d/%Y') AS likedDate
+    FROM emoticons e
+    INNER JOIN userFavorites f ON f.emoticonId = e.emoticonId
+    WHERE f.userId = ?
+    GROUP BY emoticonId
+    ORDER BY likedDate DESC;
+    `, [req.session.userId]);
+
+    apiPaginate(rows, req, res);
+  } catch (error) {
+    console.error(error);
+    generateError(res, 'Undefined Error.');
+  }
+});
+
+app.get('/api/removeFavorite/:emoticonId', async (req, res) => {
+  try {
+    let emoticonId = req.params.emoticonId;
+    let sql = `DELETE FROM userFavorites WHERE userId = ? AND emoticonId = ? LIMIT 1`;
+    let params = [req.session.userId, emoticonId];
+    let [rows] = await pool.query(sql, params);
+
+    sql = `SELECT COUNT(userId) AS likes FROM userFavorites WHERE userId = ?`;
+    let [likes_rows] = await pool.query(sql, req.session.userId);
+
+    res.json({"message": "Successfully removed row!", "num_likes": likes_rows[0].likes});
+  } catch (error) {
+    console.error(error);
+    generateError(res, 'Undefined Error when removing Emoticon.');
+  }
+});
+
+/*
+=============================================
    Emoticons APIs
    Following conventions from the docs/api.md documentation
 =============================================
@@ -1068,6 +1123,7 @@ function apiPaginate(rows, req, res) {
       emoticonCategory: emoticon.emoticonCategory,
       emoticonMood: emoticon.emoticonMood,
       emoticonFavorites: emoticon.emoticonFavorites,
+      likedDate: emoticon.likedDate ?? 'N/A',
     };
 
     emoticons.push(emoticonObject);
