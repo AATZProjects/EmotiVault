@@ -525,6 +525,20 @@ app.get('/browse', async (req, res) => {
 
 });
 
+app.post('/api/favorites', isAuthenticated, async (req, res) => {
+  let userId = req.session.userId;
+  let emoticon = req.body.emoticonId;
+
+  let sql = `INSERT INTO userFavorites
+           (userId, emoticonId, likedDate)
+           VALUES (?, ?, NOW())`;
+
+  let params = [userId, emoticon];
+
+  await pool.query(sql, params);
+
+  res.json({"message": "Added to favorites!"});
+});
 
 /*
 =============================================

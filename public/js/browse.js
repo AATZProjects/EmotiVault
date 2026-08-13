@@ -18,7 +18,7 @@ for( let i = 0; i < copyBtns.length; i++) {
 
 const starBtns = document.querySelectorAll(".starBtns");
 for(let j = 0; j < starBtns.length; j++) {
-    starBtns[j].addEventListener("click", addToFavorites);
+    starBtns[j].addEventListener("click", favoriteClick);
 }
 
 const pageNumber = document.querySelectorAll(".ev-page-number");
@@ -28,11 +28,8 @@ for (let p = 0; p < pageNumber.length; p++) {
 
 async function initPage() {
 
-    console.log("Init Page ran!");
     const response = await fetch(`/api/emoticons/all?page=${currentPage}&limit=${limit}`);
-    console.log("Response obtained!");
     const data = await response.json();
-    console.log("Data stored!");
     console.log(data);
 
 
@@ -224,13 +221,7 @@ function copyEmoticon(event) {
 
     navigator.clipboard.writeText(copyEmoticon);
     
-    console.log(copyEmoticon);
-}
-
-function addToFavorites(event) {
-    const favoriteEmoticons = event.target.dataset.emoticon;
-
-    console.log(favoriteEmoticons);
+    alert("Emoticon copied to clipboard!");
 }
 
 // Pagination functions
@@ -273,5 +264,89 @@ function changePage(event) {
 
     getFilteredEmoticons();
 }
+// Responsible for handling add/removale of favorites when the user clicks the star button
+async function favoriteClick(event) {
+    let favoriteBtn = event.currentTarget;
+    let emoticonId = favoriteBtn.dataset.emoticonId;
+
+    if (favoriteBtn.textContent.trim() === "☆") {
+        await addToFavorites(event);
+    } else {
+        await removeFavorites(emoticonId);
+        favoriteBtn.textContent = "☆";
+    }
+    console.log("Removed emoticonId: ", emoticonId);
+    console.log("added emoticon: ", favoriteBtn);
+}
+
+//Sends the emoticonId to the post route to update the database
+async function addToFavorites(event) {
+    const favoritedBtn = event.target;
+    const emoticonId = favoritedBtn.dataset.emoticonId;
+
+    // send request to the api and make it a POST method
+    const response = await fetch("/api/favorites", {
+        method: "POST",
+        //Tells the server the type of package being sent
+        headers: {
+            "content-Type": "application/json"
+        },
+
+        //body gives the server the emoticonId packaged for HTTP request traversal
+        body: JSON.stringify({
+            emoticonId: emoticonId
+        })
+    });
+
+    //Redirect the use to the login page identified by the url built-in property of the response object
+    if (response.redirected) {
+        window.location.href = response.url;
+        return;
+    }
+
+    const data = await response.json();
+
+    favoritedBtn.textContent = "★";
+    
+    alert(data.message);
+}
+
+//Displays the currently favorited emoticons by highlighting the star buttons 
+async function loadFavorites() {
+    let response = await fetch("/api/userFavorites");
+    let data = await response.json();
+    let favorited; 
+    let emoticonId;
+
+    let favoriteBtns = document.querySelectorAll(".starBtns");
+    
+    for (let i = 0; i < favoriteBtns.length; i++) {
+        favorited = favoriteBtns[i];
+        emoticonId = Number(favorited.dataset.emoticonId);
+        // console.log("emoticon ID: ", emoticonId);
+        // console.log("favorited: ", favorited);
+
+        for (let j = 0; j < data.emoticons.length; j++) {
+            let favoriteId = data.emoticons[j].emoticonId;
+
+            // console.log("Favorited Id: ", favoriteId);
+            if (emoticonId === favoriteId) {
+                favorited.textContent = "★";
+            }
+        }
+        // favorited.addEventListener("click", removeFavorites);
+    }
+    console.log("data: ", data);
+}
+
+//Removes the emoticon from the database using local API 
+async function removeFavorites(emoticonId) {
+
+    let response = await fetch(`/api/removeFavorite/${emoticonId}`);
+    let data = await response.json();
+
+    alert(data.message);
+}
 
 initPage();
+loadFavorites();
