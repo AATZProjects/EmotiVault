@@ -86,6 +86,7 @@ function updateEmoticons(emoticons) {
         const emoticonString = document.createElement("td");
         const category = document.createElement("td");
         const mood = document.createElement("td");
+        const moodSpan = document.createElement("span");
         const favorites = document.createElement("td");
         const actions = document.createElement("td");
 
@@ -94,7 +95,8 @@ function updateEmoticons(emoticons) {
     
         emoticonString.textContent = emoticons[i].emoticonString;
         category.textContent = emoticons[i].emoticonCategory;
-        mood.textContent = emoticons[i].emoticonMood;
+        moodSpan.textContent = emoticons[i].emoticonMood;
+        moodSpan.className = `ev-mood-badge ev-mood-${emoticons[i].emoticonMood.toLowerCase()}`;
         favorites.textContent = emoticons[i].emoticonFavorites;
 
         copyBtn.className = "ev-btn ev-btn-light ev-btn-sm copyBtns";
@@ -111,6 +113,7 @@ function updateEmoticons(emoticons) {
         actions.appendChild(copyBtn);
         actions.appendChild(starBtn);
 
+        mood.appendChild(moodSpan);
         tr.appendChild(emoticonString);
         tr.appendChild(category);
         tr.appendChild(mood);

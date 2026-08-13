@@ -79,7 +79,7 @@
                         <tr>
                         <td class="ev-table-emoticon"><%=emoticons[i].emoticonString%></td>
                         <td><%=emoticons[i].emoticonCategory%></td>
-                        <td><%=emoticons[i].emoticonMood%></td>
+                        <td><span class="<%= `ev-mood-badge ev-mood-${emoticons[i].emoticonMood.toLowerCase()}` %>"><%=emoticons[i].emoticonMood%></span></td>
                         <td><%=emoticons[i].favorites %></td>
                         <td class="ev-table-actions">
                         <button class="ev-btn ev-btn-light ev-btn-sm copyBtns" 

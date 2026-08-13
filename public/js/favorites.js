@@ -137,7 +137,10 @@ async function renderEmoticons() {
 
         // Emoticon Mood
         let emoticonMood = document.createElement("td");
-        emoticonMood.innerHTML = emoticonRow.emoticonMood;
+        let emoticonMoodSpan = document.createElement("span");
+        emoticonMoodSpan.className = `ev-mood-badge ev-mood-${emoticonRow.emoticonMood.toLowerCase()}`;
+        emoticonMoodSpan.innerHTML = emoticonRow.emoticonMood;
+        emoticonMood.appendChild(emoticonMoodSpan);
         tableRow.appendChild(emoticonMood);
 
         // Date Added
