@@ -51,8 +51,13 @@ function renderPageButtons() {
     nextButton.innerHTML = "Next ›";
     lastButton.innerHTML = "Last »";
 
-    nextButton.className = "ev-page-link";
-    lastButton.className = "ev-page-link";
+    if (currentPage === numPages) {
+        nextButton.className = "ev-page-link is-disabled";
+        lastButton.className = "ev-page-link is-disabled";
+    } else {
+        nextButton.className = "ev-page-link";
+        lastButton.className = "ev-page-link";
+    }
 
     nextButton.id = "next-btn";
     lastButton.id = "last-btn";
@@ -137,7 +142,10 @@ async function renderEmoticons() {
 
         // Emoticon Mood
         let emoticonMood = document.createElement("td");
-        emoticonMood.innerHTML = emoticonRow.emoticonMood;
+        let emoticonMoodSpan = document.createElement("span");
+        emoticonMoodSpan.className = `ev-mood-badge ev-mood-${emoticonRow.emoticonMood.toLowerCase()}`;
+        emoticonMoodSpan.innerHTML = emoticonRow.emoticonMood;
+        emoticonMood.appendChild(emoticonMoodSpan);
         tableRow.appendChild(emoticonMood);
 
         // Date Added

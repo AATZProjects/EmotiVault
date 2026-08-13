@@ -26,6 +26,11 @@ for (let p = 0; p < pageNumber.length; p++) {
     pageNumber[p].addEventListener("click", changePage); //event passed into changePage() parameter 
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+    await initPage();
+    await loadFavorites();
+});
+
 async function initPage() {
 
     const response = await fetch(`/api/emoticons/all?page=${currentPage}&limit=${limit}`);
@@ -62,6 +67,8 @@ async function getFilteredEmoticons() {
 
     console.log("Current page: ", currentPage);
     console.log("Total filtered pages: ", data.num_pages);
+
+    await loadFavorites();
 } 
 
 async function filterEmoticons(event) {
@@ -71,7 +78,7 @@ async function filterEmoticons(event) {
     //New filter search resets the page to 1
     currentPage = 1;
 
-    getFilteredEmoticons();
+    await getFilteredEmoticons();
     updatePaginationBar();
 }
 
@@ -86,6 +93,7 @@ function updateEmoticons(emoticons) {
         const emoticonString = document.createElement("td");
         const category = document.createElement("td");
         const mood = document.createElement("td");
+        const moodSpan = document.createElement("span");
         const favorites = document.createElement("td");
         const actions = document.createElement("td");
 
@@ -94,7 +102,8 @@ function updateEmoticons(emoticons) {
     
         emoticonString.textContent = emoticons[i].emoticonString;
         category.textContent = emoticons[i].emoticonCategory;
-        mood.textContent = emoticons[i].emoticonMood;
+        moodSpan.textContent = emoticons[i].emoticonMood;
+        moodSpan.className = `ev-mood-badge ev-mood-${emoticons[i].emoticonMood.toLowerCase()}`;
         favorites.textContent = emoticons[i].emoticonFavorites;
 
         copyBtn.className = "ev-btn ev-btn-light ev-btn-sm copyBtns";
@@ -106,11 +115,12 @@ function updateEmoticons(emoticons) {
         starBtn.type = "button"
         starBtn.textContent = "☆";
         starBtn.dataset.emoticonId = emoticons[i].emoticonId;
-        starBtn.addEventListener("click", addToFavorites);
+        starBtn.addEventListener("click", favoriteClick);
 
         actions.appendChild(copyBtn);
         actions.appendChild(starBtn);
 
+        mood.appendChild(moodSpan);
         tr.appendChild(emoticonString);
         tr.appendChild(category);
         tr.appendChild(mood);
@@ -225,47 +235,50 @@ function copyEmoticon(event) {
 }
 
 // Pagination functions
-function nextPage(event) {
+async function nextPage(event) {
     event.preventDefault();
     if (currentPage < numPages){
         currentPage++;
     }
-    getFilteredEmoticons();
+    await getFilteredEmoticons();
 }
 
-function prevPage(event) {
+async function prevPage(event) {
     event.preventDefault();
     
     if (currentPage === 1) {
         return;
     } else {
         currentPage--;
-        getFilteredEmoticons();
+        await getFilteredEmoticons();
     }
 }
 
-function firstPage(event) {
+async function firstPage(event) {
     event.preventDefault();
     currentPage = 1;
 
-    getFilteredEmoticons();
+    await getFilteredEmoticons();
 }
 
-function lastPage(event) {
+async function lastPage(event) {
     event.preventDefault();
     currentPage = numPages;
 
-    getFilteredEmoticons();
+    await getFilteredEmoticons();
 }
 
-function changePage(event) {
+async function changePage(event) {
     event.preventDefault();
     currentPage = Number(event.target.dataset.page);
 
-    getFilteredEmoticons();
+    await getFilteredEmoticons();
+    await loadFavorites();
 }
 // Responsible for handling add/removale of favorites when the user clicks the star button
 async function favoriteClick(event) {
+    console.log("Favorite click running!");
+    
     let favoriteBtn = event.currentTarget;
     let emoticonId = favoriteBtn.dataset.emoticonId;
 
@@ -274,6 +287,7 @@ async function favoriteClick(event) {
     } else {
         await removeFavorites(emoticonId);
         favoriteBtn.textContent = "☆";
+        favoriteBtn.style.color = "black";
     }
     console.log("Removed emoticonId: ", emoticonId);
     console.log("added emoticon: ", favoriteBtn);
@@ -307,6 +321,7 @@ async function addToFavorites(event) {
     const data = await response.json();
 
     favoritedBtn.textContent = "★";
+    favoritedBtn.style.color = "var(--ev-yellow)";
     
     alert(data.message);
 }
@@ -323,8 +338,8 @@ async function loadFavorites() {
     for (let i = 0; i < favoriteBtns.length; i++) {
         favorited = favoriteBtns[i];
         emoticonId = Number(favorited.dataset.emoticonId);
-        // console.log("emoticon ID: ", emoticonId);
-        // console.log("favorited: ", favorited);
+        console.log("emoticon ID: ", emoticonId);
+        console.log("favorited: ", favorited);
 
         for (let j = 0; j < data.emoticons.length; j++) {
             let favoriteId = data.emoticons[j].emoticonId;
@@ -332,6 +347,7 @@ async function loadFavorites() {
             // console.log("Favorited Id: ", favoriteId);
             if (emoticonId === favoriteId) {
                 favorited.textContent = "★";
+                favorited.style.color = "var(--ev-yellow)";
             }
         }
         // favorited.addEventListener("click", removeFavorites);
@@ -348,5 +364,3 @@ async function removeFavorites(emoticonId) {
     alert(data.message);
 }
 
-initPage();
-loadFavorites();
