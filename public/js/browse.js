@@ -261,11 +261,12 @@ function lastPage(event) {
     getFilteredEmoticons();
 }
 
-function changePage(event) {
+async function changePage(event) {
     event.preventDefault();
     currentPage = Number(event.target.dataset.page);
 
     getFilteredEmoticons();
+    await loadFavorites();
 }
 // Responsible for handling add/removale of favorites when the user clicks the star button
 async function favoriteClick(event) {
@@ -277,6 +278,7 @@ async function favoriteClick(event) {
     } else {
         await removeFavorites(emoticonId);
         favoriteBtn.textContent = "☆";
+        favoriteBtn.style.color = "black";
     }
     console.log("Removed emoticonId: ", emoticonId);
     console.log("added emoticon: ", favoriteBtn);
@@ -310,6 +312,7 @@ async function addToFavorites(event) {
     const data = await response.json();
 
     favoritedBtn.textContent = "★";
+    favoritedBtn.style.color = "var(--ev-yellow)";
     
     alert(data.message);
 }
@@ -335,6 +338,7 @@ async function loadFavorites() {
             // console.log("Favorited Id: ", favoriteId);
             if (emoticonId === favoriteId) {
                 favorited.textContent = "★";
+                favorited.style.color = "var(--ev-yellow)";
             }
         }
         // favorited.addEventListener("click", removeFavorites);
