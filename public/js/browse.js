@@ -67,6 +67,8 @@ async function getFilteredEmoticons() {
 
     console.log("Current page: ", currentPage);
     console.log("Total filtered pages: ", data.num_pages);
+
+    await loadFavorites();
 } 
 
 async function filterEmoticons(event) {
